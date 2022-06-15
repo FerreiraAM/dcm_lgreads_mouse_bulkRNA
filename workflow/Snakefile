@@ -1,0 +1,7 @@
+rule download_genome:
+	output: "resources/tx_indices/mus_musculus.tar.gz"
+	conda: "workflow/envs/process_dcm_mouse_bulkRNA.yml"
+	params:
+		url = "https://github.com/pachterlab/kallisto-transcriptome-indices/releases/download/ensembl-96/mus_musculus.tar.gz"
+	shell:
+		"wget -O {output} {params.url}"
