@@ -1,3 +1,15 @@
+# Config file
+configfile: "config/config.yml"
+
+import glob
+# infer input fastq files from dirs in config file and sample wildcard
+def get_fastq_files(wildcards):
+	indir = config["samples"][wildcards.mutation][wildcards.sample]
+	file1 = glob.glob(indir + "/*" + wildcards.sample  + "_1_sequence.txt.gz")
+	file2 = glob.glob(indir + "/*" + wildcards.sample  + "_2_sequence.txt.gz")
+	return {"fastq1" : file1, "fastq2" : file2}
+
+# Download index
 rule download_genome:
 	output: 
 		idx = "resources/tx_indices/Mus_musculus.GRCm38.cdna.all.release-94_k31.idx"
@@ -18,14 +30,22 @@ rule download_genome:
 #	shell:
 #		"gzip -d {input} > {output}"
 
+# Run mapping
 rule run_kallisto:
 	input: 
-		index = "resources/tx_indices/Mus_musculus.GRCm38.cdna.all.release-94_k31.idx",
-		file1 = "/g/steinmetz/incoming/solexa/2021-10-15-HWFVFBGXJ/HWFVFBGXJ_197_21s003517-1-1_Clauder-Muenster_lane121s003517_1_sequence.txt.gz",
-		file2 = "/g/steinmetz/incoming/solexa/2021-10-15-HWFVFBGXJ/HWFVFBGXJ_197_21s003517-1-1_Clauder-Muenster_lane121s003517_2_sequence.txt.gz"
+	  unpack(get_fastq_files),
+		index = "resources/tx_indices/Mus_musculus.GRCm38.cdna.all.release-94_k31.idx"
 	output:
-		"results/P635L_mice/output_21s003517-1-1_mice/"
+		"results/{mutation}/{sample}/abundance.tsv",
+		"results/{mutation}/{sample}/abundance.h5"
+	params:
+	  outdir = "results/{mutation}/{sample}"
 	conda: 
 		"envs/process_dcm_mouse_bulkRNA.yml"
 	shell:
-		"kallisto quant -i {input.index} -o {output} {input.file1} {input.file2}"
+		"kallisto quant -i {input.index} -o {params.outdir} {input.fastq1} {input.fastq2}"
+		
+rule all_aligment:
+  input:
+    expand("results/P635L/{sample}/abundance.tsv", sample = config["samples"]["P635L"]),
+    expand("results/R636Q/{sample}/abundance.tsv", sample = config["samples"]["R636Q"])
