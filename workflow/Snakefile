@@ -9,6 +9,11 @@ def get_fastq_files(wildcards):
 	file2 = glob.glob(indir + "/*" + wildcards.sample  + "_2_sequence.txt.gz")
 	return {"fastq1" : file1, "fastq2" : file2}
 
+rule all_aligment:
+  input:
+    expand("results/P635L/{sample}/abundance.tsv", sample = config["samples"]["P635L"]),
+    expand("results/R636Q/{sample}/abundance.tsv", sample = config["samples"]["R636Q"])
+
 # Download index
 rule download_genome:
 	output: 
@@ -19,16 +24,6 @@ rule download_genome:
 		url = "https://github.com/pachterlab/kallisto-transcriptome-indices/releases/download/94/Mus_musculus.GRCm38.cdna.all.release-94_k31.idx.gz"
 	shell:
 		"wget -O {output.idx}.gz {params.url}; gunzip {output.idx}.gz"
-
-# rule gzip_index:
-# 	input: 
-# 		"resources/tx_indices/Mus_musculus.GRCm38.cdna.all.release-94_k31.idx.gz"
-#	output:
-#		"resources/tx_indices/Mus_musculus.GRCm38.cdna.all.release-94_k31.idx"
-#	conda: 
-#		"envs/process_dcm_mouse_bulkRNA.yml"
-#	shell:
-#		"gzip -d {input} > {output}"
 
 # Run mapping
 rule run_kallisto:
@@ -44,8 +39,16 @@ rule run_kallisto:
 		"envs/process_dcm_mouse_bulkRNA.yml"
 	shell:
 		"kallisto quant -i {input.index} -o {params.outdir} {input.fastq1} {input.fastq2}"
-		
-rule all_aligment:
+    
+# DESeq
+rule deseq_analysis:
   input:
-    expand("results/P635L/{sample}/abundance.tsv", sample = config["samples"]["P635L"]),
-    expand("results/R636Q/{sample}/abundance.tsv", sample = config["samples"]["R636Q"])
+    meta = config["samples_metadata"],
+    P635L_files = expand("results/P635L/{sample}/abundance.tsv", sample = config["samples"]["P635L"]),
+    R636Q_files = expand("results/R636Q/{sample}/abundance.tsv", sample = config["samples"]["R636Q"])
+  output:
+    "results/total_nb_reads.csv"
+  conda:
+    "envs/process_dcm_mouse_bulkRNA.yml"
+  script:
+    "scripts/DESeq_analysis.R"

@@ -16,21 +16,22 @@ samples:
     "21s003508": "/g/steinmetz/incoming/solexa/2021-10-04-H5JYHBGXK"
     "21s003509": "/g/steinmetz/incoming/solexa/2021-10-04-H5JYHBGXK"
     "21s003510": "/g/steinmetz/incoming/solexa/2021-10-04-H5JYHBGXK"
-    
   R636Q:
     "22s000637": "/g/steinmetz/incoming/solexa/2022-03-04-HF3M5BGXL"
     "22s000638": "/g/steinmetz/incoming/solexa/2022-03-04-HF3M5BGXL"
     "22s000641": "/g/steinmetz/incoming/solexa/2022-03-04-HF3M5BGXL"
-    "22s000639": "/g/steinmetz/incoming/solexa/2022-03-04-HF3M5BGXL"
     "22s000639": "/g/steinmetz/incoming/solexa/2022-03-04-HF3M5BGXL"
     "22s000640": "/g/steinmetz/incoming/solexa/2022-03-04-HF3M5BGXL"
     "22s000629": "/g/steinmetz/incoming/solexa/2022-03-04-HKJG7BGXL"
     "22s000628": "/g/steinmetz/incoming/solexa/2022-03-04-HKJG7BGXL"
     "22s000627": "/g/steinmetz/incoming/solexa/2022-03-04-HKJG7BGXL"
     "22s000630": "/g/steinmetz/incoming/solexa/2022-03-04-HKJG7BGXL"
-    "22s00063": "/g/steinmetz/incoming/solexa/2022-03-04-HKJG7BGXL"
+    "22s000631": "/g/steinmetz/incoming/solexa/2022-03-04-HKJG7BGXL"
     "22s000636": "/g/steinmetz/incoming/solexa/2022-03-04-HKJNFBGXL"
     "22s000634": "/g/steinmetz/incoming/solexa/2022-03-04-HKJNFBGXL"
     "22s000635": "/g/steinmetz/incoming/solexa/2022-03-04-HKJNFBGXL"
     "22s000632": "/g/steinmetz/incoming/solexa/2022-03-04-HKJNFBGXL"
     "22s000633": "/g/steinmetz/incoming/solexa/2022-03-04-HKJNFBGXL"
+
+# Samples metadata link
+samples_metadata: "/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/config/samples_metadata.txt"
