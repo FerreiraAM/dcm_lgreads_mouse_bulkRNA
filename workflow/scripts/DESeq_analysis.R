@@ -7,6 +7,8 @@ library(tidyverse)
 library(DESeq2)
 library(tximport)
 library(rtracklayer)
+library(ggplot2)
+library(ggfortify)
 
 # Data analysis 
 
@@ -59,3 +61,18 @@ total_nb_reads_merge_w_metadata <- left_join(samples_metadata, total_nb_reads)
 write.csv(total_nb_reads_merge_w_metadata[,c("mutant", "run", "genotype", "total_nb_reads")], 
           file = "/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results/total_nb_reads.csv", 
           col.names = TRUE, row.names = FALSE)
+
+# PCA
+# Prepare data for PCA
+counts_all_mice <- t(all_txi$counts)
+counts_all_mice_wnames <- rownames_to_column(as.data.frame(counts_all_mice), var = "run")
+counts_all_mice_wmeta <- left_join(counts_all_mice_wnames, samples_metadata)
+# Perform PCA
+pca_all_mice <- prcomp(counts_all_mice)
+plot_pca <- autoplot(pca_all_mice, data = counts_all_mice_wmeta, colour = "mutant") +
+  theme_bw() +
+  ggtitle("PCA with all mice and all genes")
+ggsave("/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results/plot_pca_all_mice_genes.pdf", 
+       plot = plot_pca)
+
+# DESeq2

@@ -47,7 +47,8 @@ rule deseq_analysis:
     P635L_files = expand("results/P635L/{sample}/abundance.tsv", sample = config["samples"]["P635L"]),
     R636Q_files = expand("results/R636Q/{sample}/abundance.tsv", sample = config["samples"]["R636Q"])
   output:
-    "results/total_nb_reads.csv"
+    "results/total_nb_reads.csv",
+    "results/plot_pca_all_mice_genes.pdf"
   conda:
     "envs/process_dcm_mouse_bulkRNA.yml"
   script:
