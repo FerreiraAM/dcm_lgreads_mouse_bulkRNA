@@ -14,4 +14,6 @@ dependencies:
   - bioconductor-rtracklayer #=1.54.0
   - bioconductor-rhdf5
   - r-ggplot2
+  - r-ggrepel
   - r-ggfortify 
+  - r-pheatmap
