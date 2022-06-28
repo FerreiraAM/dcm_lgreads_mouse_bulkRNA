@@ -17,3 +17,5 @@ dependencies:
   - r-ggrepel
   - r-ggfortify 
   - r-pheatmap
+  - bioconductor-dexseq 
+  - htseq

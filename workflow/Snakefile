@@ -61,3 +61,15 @@ rule deseq_analysis:
     "envs/process_dcm_mouse_bulkRNA.yml"
   script:
     "scripts/DESeq_analysis.R"
+    
+rule DEXSeq_annotation_preparation:
+  input:
+    gtf_file = "resources/mus_musculus/Mus_musculus.GRCm38.96.gtf"
+  output:
+    "results/Mus_musculus.GRCm38.96.DEXSeq.chr.gff"
+  conda:
+    "envs/process_dcm_mouse_bulkRNA.yml"
+  shell:
+    "python /g/steinmetz/ferreira/R-lib/4.1.2-foss-2021b/DEXSeq/python_scripts/dexseq_prepare_annotation.py {input.gtf_file} {output}"
+
+  
