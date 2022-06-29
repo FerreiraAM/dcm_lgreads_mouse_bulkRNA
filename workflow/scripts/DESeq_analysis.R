@@ -74,7 +74,9 @@ counts_all_mice_wmeta <- left_join(counts_all_mice_wnames, samples_metadata)
 # Perform PCA
 # All mice
 pca_all_mice <- prcomp(counts_all_mice)
-plot_pca_all_mice <- autoplot(pca_all_mice, data = counts_all_mice_wmeta, colour = "mutant") +
+plot_pca_all_mice <- autoplot(pca_all_mice, 
+                              data = counts_all_mice_wmeta, 
+                              colour = "mutant") +
   theme_bw() +
   ggtitle("PCA with all mice and all genes")
 ggsave("results/plot_pca_all_mice_genes.pdf", 
