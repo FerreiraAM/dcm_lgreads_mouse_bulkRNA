@@ -35,3 +35,8 @@ samples:
 
 # Samples metadata link
 samples_metadata: "/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/config/samples_metadata.txt"
+
+# Mutations
+mutation: ["R636Q", "P635L"]
+  
+  
