@@ -63,7 +63,7 @@ dxd <- estimateDispersions(dxd, BPPARAM = MulticoreParam(snakemake@threads))
 # Save object
 save(dxd, file = paste0("results/DEXSeq/robject_", {mut}, "_dexseq_estdisp_3conditions.rda"))
 # plot
-pdf(paste0("results/DEXSeq/plot_", mut, "_dxd_dispersion_estimate_3conditions.pdf"))
+png(paste0("results/DEXSeq/plot_", mut, "_dxd_dispersion_estimate_3conditions.png"))
 plotDispEsts(dxd)
 dev.off()
 
@@ -86,6 +86,6 @@ dxd_wt_hom <- estimateDispersions(dxd_wt_hom, BPPARAM = MulticoreParam(snakemake
 # Save object
 save(dxd_wt_hom, file = paste0("results/DEXSeq/robject_", {mut}, "_dexseq_estdisp_WTvsHOM.rda"))
 # plot
-pdf(paste0("results/DEXSeq/plot_", mut, "_dxd_dispersion_estimate_WTvsHOM.pdf"))
+png(paste0("results/DEXSeq/plot_", mut, "_dxd_dispersion_estimate_WTvsHOM.png"))
 plotDispEsts(dxd_wt_hom)
 dev.off()
