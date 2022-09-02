@@ -21,5 +21,4 @@ dependencies:
   - r-pheatmap
   - bioconductor-dexseq 
   - htseq
-  - star 
-  - pysam
+  - star

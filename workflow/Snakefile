@@ -1,7 +1,10 @@
 # Config file
 configfile: "config/config.yml"
 
+# print(config["samples"]["P635L"])
+
 import glob
+
 # infer input fastq files from dirs in config file and sample wildcard
 def get_fastq_files(wildcards):
 	indir = config["samples"][wildcards.mutation][wildcards.sample]
@@ -20,8 +23,10 @@ rule all_aligment:
 rule all_STAR_mapping:
   input:
     expand("results/STAR/P635L/{sample}/Aligned.sortedByCoord.out.bam", sample = config["samples"]["P635L"]),
-    expand("results/STAR/R636Q/{sample}/Aligned.sortedByCoord.out.bam", sample = config["samples"]["R636Q"])
-
+    expand("results/STAR/R636Q/{sample}/Aligned.sortedByCoord.out.bam", sample = config["samples"]["R636Q"]),
+    expand("results/STAR/P635L_after_base_editing/{sample}/Aligned.sortedByCoord.out.bam", sample = config["samples"]["P635L_after_base_editing"]),
+    expand("results/STAR/R636Q_after_base_editing/{sample}/Aligned.sortedByCoord.out.bam", sample = config["samples"]["R636Q_after_base_editing"])
+    
 # For DEXSeq count reads
 rule all_DEXSeq_count_reads:
   input:
@@ -169,6 +174,23 @@ rule STAR_mapping:
   shell:
     "STAR --genomeDir {input.dir} --runThreadN 6 --readFilesIn {input.fastq1} {input.fastq2} --outFileNamePrefix {params.prefix} --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within --outSAMattributes Standard  --readFilesCommand zcat"
 
+# STAR report info
+rule STAR_report_info:
+  input:
+    expand("results/STAR/P635L/{sample}/Log.final.out", sample = config["samples"]["P635L"]),
+    expand("results/STAR/R636Q/{sample}/Log.final.out", sample = config["samples"]["R636Q"]),
+    expand("results/STAR/P635L_after_base_editing/{sample}/Log.final.out", sample = config["samples"]["P635L_after_base_editing"]),
+    expand("results/STAR/R636Q_after_base_editing/{sample}/Log.final.out", sample = config["samples"]["R636Q_after_base_editing"])
+    # expand("results/STAR/{experiment}/{sample}/Log.final.out",
+    #         experiment = config["samples"],
+    #         sample = config["samples"]["experiment"])
+  conda:
+    "envs/process_dcm_mouse_bulkRNA.yml"
+  output:
+    "results/table_STARalignment_total_number_reads.txt"
+  script:
+    "scripts/align_report.R"
+
 # Run DEXSeq
 # Prepare the annotation
 rule DEXSeq_annotation_preparation:
@@ -314,3 +336,11 @@ rule count_matrices:
     6
   script:
     "scripts/DESeq_analysis_withSTARalignment_createcountmatrices.R"
+    
+# rMATS
+# rule splicing_event_with_rMATS:
+#   conda:
+#     "envs/process_dcm_mouse_bulkRNA.yml"
+#   shell:
+#     "python rmats.py --b1 results/STAR/P635L/21s003516/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003517/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003518/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003519/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003520/Aligned.sortedByCoord.out_sorted.bam --b2 results/STAR/P635L/21s003506/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003507/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003508/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003509/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003510/Aligned.sortedByCoord.out_sorted.bam --gtf resources/gencode.vM29.annotation.gtf -t paired --readLength 50 --nthread 1 --od results/rMATs --tmp results/rMATs/tmp_output"
+# conda activate rMATS_env
