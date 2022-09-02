@@ -83,6 +83,20 @@ write.table(x = res_P635L_homvswt_sig,
             file = "results/table_STARalignment_res_P635L_homvswt_sig.txt",
             row.names = FALSE,
             col.names = TRUE)
+# P635L HET vs WT
+res_P635L_hetvswt <- results(dds_P635L, contrast=c("genotype","het","wt"))
+res_P635L_hetvswt_sig <- dplyr::filter(as.data.frame(res_P635L_hetvswt), 
+                                       padj < 0.05)
+res_P635L_hetvswt_sig <- rownames_to_column(res_P635L_hetvswt_sig, var = "gene")
+write.table(x = res_P635L_hetvswt_sig,
+            file = "results/table_STARalignment_res_P635L_hetvswt_sig.txt",
+            row.names = FALSE,
+            col.names = TRUE)
+res_P635L_hetvswt_sig_withgenename <- dplyr::left_join(res_P635L_hetvswt_sig, gen_vM29_annot_gene_uniq)
+write.table(x = res_P635L_hetvswt_sig_withgenename,
+            file = "results/table_STARalignment_res_P635L_hetvswt_sig_withgenename.txt",
+            row.names = FALSE,
+            col.names = TRUE)
 
 # R636Q
 # Filter 
@@ -109,6 +123,20 @@ res_R636Q_homvswt_sig <- dplyr::filter(as.data.frame(res_R636Q_homvswt),
 res_R636Q_homvswt_sig <- rownames_to_column(res_R636Q_homvswt_sig, var = "gene")
 write.table(x = res_R636Q_homvswt_sig,
             file = "results/table_STARalignment_res_R636Q_homvswt_sig.txt",
+            row.names = FALSE,
+            col.names = TRUE)
+# R636Q het vs WT
+res_R636Q_hetvswt <- results(dds_R636Q, contrast=c("genotype","het","wt"))
+res_R636Q_hetvswt_sig <- dplyr::filter(as.data.frame(res_R636Q_hetvswt), 
+                                       padj < 0.05)
+res_R636Q_hetvswt_sig <- rownames_to_column(res_R636Q_hetvswt_sig, var = "gene")
+write.table(x = res_R636Q_hetvswt_sig,
+            file = "results/table_STARalignment_res_R636Q_hetvswt_sig.txt",
+            row.names = FALSE,
+            col.names = TRUE)
+res_R636Q_hetvswt_sig_withgenename <- dplyr::left_join(res_R636Q_hetvswt_sig, gen_vM29_annot_gene_uniq)
+write.table(x = res_R636Q_hetvswt_sig_withgenename,
+            file = "results/table_STARalignment_res_R636Q_hetvswt_sig_withgenename.txt",
             row.names = FALSE,
             col.names = TRUE)
 
@@ -186,6 +214,16 @@ function_my_heatmap(mutation = "R636Q",
                     filter_col = "genotype",
                     top = 20)
 dev.off()
+pdf("results/heatmap_STARalignment_R636Q_hetvswt_top20.pdf")
+function_my_heatmap(mutation = "R636Q",
+                    dds = dds_R636Q,
+                    res = res_R636Q_hetvswt_sig,
+                    sample_tab = sample_table_R636Q, 
+                    annot = gen_vM29_annot_gene_uniq,
+                    gen = c("het", "wt"),
+                    filter_col = "genotype",
+                    top = 20)
+dev.off()
 pdf("results/heatmap_STARalignment_P635L_homvswt_top20.pdf")
 function_my_heatmap(mutation = "P635L",
                     dds = dds_P635L,
@@ -193,6 +231,16 @@ function_my_heatmap(mutation = "P635L",
                     sample_tab = sample_table_P635L, 
                     annot = gen_vM29_annot_gene_uniq,
                     gen = c("hom", "wt"),
+                    filter_col = "genotype",
+                    top = 20)
+dev.off()
+pdf("results/heatmap_STARalignment_P635L_hetvswt_top20.pdf")
+function_my_heatmap(mutation = "P635L",
+                    dds = dds_P635L,
+                    res = res_P635L_hetvswt_sig,
+                    sample_tab = sample_table_P635L, 
+                    annot = gen_vM29_annot_gene_uniq,
+                    gen = c("het", "wt"),
                     filter_col = "genotype",
                     top = 20)
 dev.off()
@@ -214,7 +262,7 @@ dim(counts(dds_P635L, normalized = TRUE))
 geneexp_dds_P635L <- t(counts(dds_P635L, normalized = TRUE))
 # Average per gene for WT
 wt_IDs <- dplyr::filter(sample_table_P635L, genotype == "wt") %>% pull(run)
-pergene_P635L_WT <- dplyr::select(as.data.frame(counts(dds_P635L, , normalized = TRUE)), wt_IDs)
+pergene_P635L_WT <- dplyr::select(as.data.frame(counts(dds_P635L, normalized = TRUE)), wt_IDs)
 avg_pergene_P635L_WT <- rowMeans(pergene_P635L_WT)
 # Remove WT columns
 geneexp_dds_P635L_hom_het <- dplyr::select(as.data.frame(counts(dds_P635L, normalized = TRUE)), -wt_IDs)
@@ -233,6 +281,17 @@ avg_pergene_P635L_WT_df <- data.frame(gene=names(avg_pergene_P635L_WT),
                                       row.names=NULL)
 geneexp_dds_P635L_hom_het_lg_wgenot_wwt <- left_join(geneexp_dds_P635L_hom_het_lg_wgenot, 
                                                      avg_pergene_P635L_WT_df)
+# Extract list of genes with zero reads in WT and combine with gene name
+geneexp_dds_P635L_hom_het_lg_wgenot_wwt_zeroreads <- dplyr::filter(geneexp_dds_P635L_hom_het_lg_wgenot_wwt,
+                                                                   wt_avg == 0) %>% 
+  pull(gene) %>% 
+  unique
+geneexp_dds_P635L_hom_het_lg_wgenot_wwt_zeroreads <- left_join(data.frame(gene = geneexp_dds_P635L_hom_het_lg_wgenot_wwt_zeroreads), 
+                                                               gen_vM29_annot_gene_uniq)
+write.table(geneexp_dds_P635L_hom_het_lg_wgenot_wwt_zeroreads,
+            file = "results/geneexp_P635L_hom_het_WT_zeroreads.txt", 
+            row.names = FALSE,
+            col.names = TRUE)
 # Filter genes with zero reads in WT mice as I won't be able to compute a log2 FC for these genes
 geneexp_dds_P635L_hom_het_lg_wgenot_wwt <- dplyr::filter(geneexp_dds_P635L_hom_het_lg_wgenot_wwt,
                                                          wt_avg != 0)
@@ -269,6 +328,17 @@ avg_pergene_R636Q_WT_df <- data.frame(gene=names(avg_pergene_R636Q_WT),
                                       row.names=NULL)
 geneexp_dds_R636Q_hom_het_lg_wgenot_wwt <- left_join(geneexp_dds_R636Q_hom_het_lg_wgenot, 
                                                      avg_pergene_R636Q_WT_df)
+# Extract list of genes with zero reads in WT
+geneexp_dds_R636Q_hom_het_lg_wgenot_wwt_zeroreads <- dplyr::filter(geneexp_dds_R636Q_hom_het_lg_wgenot_wwt,
+                                                                   wt_avg == 0) %>% 
+  pull(gene) %>% 
+  unique
+geneexp_dds_R636Q_hom_het_lg_wgenot_wwt_zeroreads <- left_join(data.frame(gene = geneexp_dds_R636Q_hom_het_lg_wgenot_wwt_zeroreads), 
+                                                               gen_vM29_annot_gene_uniq)
+write.table(geneexp_dds_R636Q_hom_het_lg_wgenot_wwt_zeroreads,
+            file = "results/geneexp_R636Q_hom_het_WT_zeroreads.txt", 
+            row.names = FALSE,
+            col.names = TRUE)
 # Filter genes with zero reads in WT mice as I won't be able to compute a log2 FC for these genes
 geneexp_dds_R636Q_hom_het_lg_wgenot_wwt <- dplyr::filter(geneexp_dds_R636Q_hom_het_lg_wgenot_wwt,
                                                          wt_avg != 0)
@@ -280,6 +350,19 @@ geneexp_dds_R636Q_hom_het_lg_log2FC <- geneexp_dds_R636Q_hom_het_lg_wgenot_wwt %
 # dplyr::filter(geneexp_dds_R636Q_hom_het_lg_log2FC, log2_FC == -Inf)
 geneexp_dds_R636Q_hom_het_lg_log2FC <- mutate(geneexp_dds_R636Q_hom_het_lg_log2FC, 
                                               log2_FC = replace(log2_FC, log2_FC == -Inf, NA))
+
+# Combine WT gene lists with zero genes
+geneexp_dds_P635LR636Q_hom_het_lg_wgenot_wwt_zeroreads_combined <- 
+  rbind(data.frame(geneexp_dds_R636Q_hom_het_lg_wgenot_wwt_zeroreads, "mutant" = "R636Q"),
+        data.frame(geneexp_dds_P635L_hom_het_lg_wgenot_wwt_zeroreads, "mutant" = "P635L"))
+geneexp_dds_P635LR636Q_hom_het_lg_wgenot_wwt_zeroreads_combined_short <- 
+  geneexp_dds_P635LR636Q_hom_het_lg_wgenot_wwt_zeroreads_combined %>% 
+  group_by(gene_name) %>% 
+  summarize(mutants = paste0(unique(mutant), collapse = "_"))
+write.table(geneexp_dds_P635LR636Q_hom_het_lg_wgenot_wwt_zeroreads_combined_short,
+            file = "results/geneexp_P635LR636Q_hom_het_WT_zeroreads.txt", 
+            row.names = FALSE,
+            col.names = TRUE)
 
 # Heatmap
 # Filter gene list based on Markus list
@@ -379,12 +462,12 @@ pheatmap(t(heatmap_data_P635L_hom_het_p_inf_1e6_w),
          main = "P635L with DE genes p < 1e-6")
 dev.off()
 # Order heatmap rows
-idx_het <- grep("*het$", rownames(heatmap_data_R636Q_hom_het_p_inf_1e4_w))
-idx_hom <- grep("*hom$", rownames(heatmap_data_R636Q_hom_het_p_inf_1e4_w))
-idx <- c(idx_hom, idx_het)
+idx_R636Q_het <- grep("*het$", rownames(heatmap_data_R636Q_hom_het_p_inf_1e4_w))
+idx_R636Q_hom <- grep("*hom$", rownames(heatmap_data_R636Q_hom_het_p_inf_1e4_w))
+idx_R636Q <- c(idx_R636Q_hom, idx_R636Q_het)
 png("results/heatmap_STARalignment_R636Q_hom_het_p_inf_1e4.png", 
     width = 8, height = 20, units = "in", res = 1000)
-pheatmap(t(heatmap_data_R636Q_hom_het_p_inf_1e4_w[idx,]),
+pheatmap(t(heatmap_data_R636Q_hom_het_p_inf_1e4_w[idx_R636Q,]),
          na_col = "black",
          cluster_rows = FALSE, 
          show_rownames = TRUE,
@@ -395,7 +478,7 @@ pheatmap(t(heatmap_data_R636Q_hom_het_p_inf_1e4_w[idx,]),
 dev.off()
 png("results/heatmap_STARalignment_R636Q_hom_het_p_inf_1e6.png", 
     width = 8, height = 20, units = "in", res = 1000)
-pheatmap(t(heatmap_data_R636Q_hom_het_p_inf_1e6_w[idx,]),
+pheatmap(t(heatmap_data_R636Q_hom_het_p_inf_1e6_w[idx_R636Q,]),
          na_col = "grey90",
          cluster_rows = FALSE, 
          show_rownames = TRUE,
@@ -403,4 +486,132 @@ pheatmap(t(heatmap_data_R636Q_hom_het_p_inf_1e6_w[idx,]),
          cluster_cols = FALSE,
          fontsize_row = 2, 
          main = "R636Q with DE genes p < 1e-6")
+dev.off()
+
+# All individuals on one heatmap
+# p < 1e-4
+heatmap_data_P635LR636Q_hom_het_p_inf_1e4_w <- 
+  merge(heatmap_data_P635L_hom_het_p_inf_1e4_w, 
+        heatmap_data_R636Q_hom_het_p_inf_1e4_w[idx_R636Q,],
+        all = TRUE, 
+        sort = FALSE)
+rownames(heatmap_data_P635LR636Q_hom_het_p_inf_1e4_w) <-
+  c(rownames(heatmap_data_P635L_hom_het_p_inf_1e4_w),
+    rownames(heatmap_data_R636Q_hom_het_p_inf_1e4_w[idx_R636Q,]))
+# p < 1e-6
+heatmap_data_P635LR636Q_hom_het_p_inf_1e6_w <- 
+  merge(heatmap_data_P635L_hom_het_p_inf_1e6_w, 
+        heatmap_data_R636Q_hom_het_p_inf_1e6_w[idx_R636Q,],
+        all = TRUE, 
+        sort = FALSE)
+rownames(heatmap_data_P635LR636Q_hom_het_p_inf_1e6_w) <-
+  c(rownames(heatmap_data_P635L_hom_het_p_inf_1e6_w),
+    rownames(heatmap_data_R636Q_hom_het_p_inf_1e6_w[idx_R636Q,]))
+# Annotation
+annot_P635LR636Q <- data.frame(
+  "genotype" = rep(rep(c("homozygote", "heterozygote"), each = 5), 2), 
+  "mutation" = rep(c("P635L", "R636Q"), each = 10)
+)
+rownames(annot_P635LR636Q) <- rownames(heatmap_data_P635LR636Q_hom_het_p_inf_1e4_w)
+png("results/heatmap_STARalignment_P635LR636Q_hom_het_p_inf_1e4.png", 
+    width = 8, height = 20, units = "in", res = 1000)
+pheatmap(t(heatmap_data_P635LR636Q_hom_het_p_inf_1e4_w),
+         na_col = "black",
+         cluster_rows = FALSE, 
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         cluster_cols = FALSE,
+         fontsize_row = 2, 
+         main = "R636Q and P635L with DE genes p < 1e-4",
+         annotation_col = annot_P635LR636Q)
+dev.off()
+png("results/heatmap_STARalignment_P635LR636Q_hom_het_p_inf_1e6.png", 
+    width = 8, height = 20, units = "in", res = 1000)
+pheatmap(t(heatmap_data_P635LR636Q_hom_het_p_inf_1e6_w),
+         na_col = "black",
+         cluster_rows = FALSE, 
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         cluster_cols = FALSE,
+         fontsize_row = 2, 
+         main = "R636Q and P635L with DE genes p < 1e-6",
+         annotation_col = annot_P635LR636Q)
+dev.off()
+
+# Dotplot
+genes_of_interest <- 
+  c("Nppa", "Casq1", "Tnni2", "Mybpc2", "Tnnt3", 
+    "Strit1", "Myh7b", "Hopx", "Aqp4", "Nppb")
+# 
+# heatmap_data_P635L_gene_int <- 
+#   dplyr::filter(heatmap_data_P635L_hom_het_p_inf_1e6,
+#               gene_name %in% genes_of_interest)
+# heatmap_data_R636Q_gene_int <- 
+#   dplyr::filter(heatmap_data_R636Q_hom_het_p_inf_1e6,
+#                 gene_name %in% genes_of_interest)
+# 
+# ggplot(rbind(heatmap_data_P635L_gene_int, heatmap_data_R636Q_gene_int), 
+#        aes(x = gene_name, y = run)) +
+#   geom_point(aes(size = log1p(value), fill = log2_FC), pch = 21) +
+#   # Size with outline
+#   # blue to red
+#   # geom_point(aes(size = log2_FC, colour = log1p(value))) +
+#   scale_fill_gradient2(midpoint = 0, low = "blue", mid = "white",
+#                          high = "red", space ="Lab" ) +
+#   theme_bw()
+# 
+
+df_res_P635L_homvswt <- rownames_to_column(as.data.frame(res_P635L_homvswt), "gene")
+full_res_P635L_homvswt_log2FC <- inner_join(df_res_P635L_homvswt, 
+                                            heatmap_data_P635L_gene_int)
+df_res_R636Q_homvswt <- rownames_to_column(as.data.frame(res_R636Q_homvswt), "gene")
+full_res_R636Q_homvswt_log2FC <- inner_join(df_res_R636Q_homvswt, 
+                                            heatmap_data_R636Q_gene_int)
+# Combine
+full_res_P635LR636Q_homvswt_log2FC <- 
+  rbind(full_res_P635L_homvswt_log2FC, full_res_R636Q_homvswt_log2FC)
+# Add significan column
+full_res_P635LR636Q_homvswt_log2FC_sig <-
+  full_res_P635LR636Q_homvswt_log2FC %>% 
+  mutate(significant = padj < 1e-6)
+# Combine mutant and genotype
+full_res_P635LR636Q_homvswt_log2FC_sig <- 
+  full_res_P635LR636Q_homvswt_log2FC_sig %>% 
+  mutate(mutant_gen = paste(mutant, genotype, sep = "_"))
+full_res_P635LR636Q_homvswt_log2FC_sig <- 
+  full_res_P635LR636Q_homvswt_log2FC_sig %>% 
+  mutate(sample_mutant_gen = paste(mutant, genotype, run, sep = "_"))
+# Average read counts
+full_res_P635LR636Q_homvswt_log2FC_sig <- 
+  full_res_P635LR636Q_homvswt_log2FC_sig %>% 
+  group_by(gene, mutant_gen) %>% 
+  mutate(avg_value = mean(value))
+
+# Average gene expression and log2FC
+png("results/dotplot_STARalignment_P635LR636Q_hom_het_avg.png", 
+    width = 8, height = 3.5, units = "in", res = 1000)
+ggplot(full_res_P635LR636Q_homvswt_log2FC_sig, 
+       aes(x = gene_name, y = mutant_gen)) +
+  geom_point(aes(size = log1p(avg_value), fill = avg_log2FC), pch = 21) +
+  scale_fill_gradient2(midpoint = 0, low = "blue", mid = "white",
+                       high = "red", space ="Lab" ) +
+  labs(fill = "log2 Fold Change", size = "log gene expression") +
+  xlab("") +
+  ylab("") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+dev.off()
+# all samples
+png("results/dotplot_STARalignment_P635LR636Q_hom_het_allsamples.png", 
+    width = 8, height = 8, units = "in", res = 1000)
+ggplot(full_res_P635LR636Q_homvswt_log2FC_sig, 
+       aes(x = gene_name, y = sample_mutant_gen)) +
+  geom_point(aes(size = log1p(value), fill = log2_FC), pch = 21) +
+  scale_fill_gradient2(midpoint = 0, low = "blue", mid = "white",
+                       high = "red", space ="Lab" ) +
+  labs(fill = "log2 Fold Change", size = "log gene expression") +
+  xlab("gene") +
+  ylab("sample") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
 dev.off()
