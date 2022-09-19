@@ -77,8 +77,16 @@ samples:
     
 # Samples metadata link
 samples_metadata: "/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/config/samples_metadata.txt"
+sample_afterbaseediting_metadata: "/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/config/sample_afterbaseediting_metadata.txt"
 
 # Mutations
 mutation: ["R636Q", "P635L"]
+
+# Strandness
+strand:
+  P635L: 2 # reversely stranded
+  R636Q: 2 # reversely stranded
+  P635L_after_base_editing: 0 # unstranded
+  R636Q_after_base_editing: 0 # unstranded
   
   
