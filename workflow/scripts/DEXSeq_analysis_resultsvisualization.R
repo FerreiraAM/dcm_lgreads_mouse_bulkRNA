@@ -161,3 +161,97 @@ as.data.frame(R636Q_dxd_res_wt_hom[R636Q_idx_Camk2d,c("featureID", "pvalue", "pa
 
 
 dplyr::filter(df_R636Q_dxd_res_wt_hom_gene_name, padj < 0.1)
+
+############## DEBUG R636Q ##############
+# Some sample labels might have been switched
+library(ggrepel)
+# Ldb3
+check_Ldb3_values <- dplyr::filter(df_R636Q_dxd_res_wt_hom_gene_name, 
+                                   gene_name == "Ldb3")
+dim(dplyr::select(check_Ldb3_values, contains("countData")))
+
+plotDEXSeq(R636Q_dxd_res_wt_hom, 
+           Ldb3_ensembl, legend=TRUE, cex.axis=1.2, cex=1.3, lwd=2,
+           norCounts=TRUE, expression = FALSE)
+# Long format
+check_Ldb3_counts_exons_samp <- dplyr::select(check_Ldb3_values, 
+                                              featureID, contains("countData"))
+check_Ldb3_counts_exons_samp_lg <- pivot_longer(check_Ldb3_counts_exons_samp, 
+             cols = contains("countData")) %>% 
+  mutate(run = sub(".+R636Q\\.(.+)\\.read_counts.+", "\\1", name))
+check_Ldb3_counts_exons_samp_lg <- check_Ldb3_counts_exons_samp_lg %>% 
+  left_join(sample_table) %>% 
+  unite(sample_genotype, run, genotype, sep = "_", remove = FALSE)
+# Plot
+ggplot(check_Ldb3_counts_exons_samp_lg, 
+       aes(x = featureID, 
+           y = value, 
+           color = as.factor(genotype), 
+           shape = as.factor(sample_genotype))) +
+  geom_point() +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_shape_manual(values=seq(0,15)) +
+  ggtitle("R636Q - Ldb3 gene")
+# Select exon E16 to E20
+dplyr::filter(check_Ldb3_counts_exons_samp_lg, featureID %in% paste0("E0", 16:20)) %>% 
+  ggplot(., aes(x = featureID, 
+                y = value, 
+                color = as.factor(genotype), 
+                shape = as.factor(sample_genotype),
+                label = sample_genotype)) +
+  geom_point(cex = 3) +
+  geom_text(hjust=0, vjust=0.2) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_shape_manual(values=seq(0,15)) +
+  ggtitle("R636Q - Ldb3 gene")
+# Ttn
+check_Ttn_values <- dplyr::filter(df_R636Q_dxd_res_wt_hom_gene_name, 
+                                   gene_name == "Ttn")
+dim(dplyr::select(check_Ttn_values, contains("countData")))
+plotDEXSeq(R636Q_dxd_res_wt_hom, 
+           Ttn_ensembl, legend=TRUE, cex.axis=1.2, cex=1.3, lwd=2,
+           norCounts=TRUE, expression = FALSE)
+check_Ttn_counts_exons_samp <- dplyr::select(check_Ttn_values, 
+                                              featureID, contains("countData"))
+check_Ttn_counts_exons_samp_lg <- pivot_longer(check_Ttn_counts_exons_samp, 
+                                                cols = contains("countData")) %>% 
+  mutate(run = sub(".+R636Q\\.(.+)\\.read_counts.+", "\\1", name))
+check_Ttn_counts_exons_samp_lg <- check_Ttn_counts_exons_samp_lg %>% 
+  left_join(sample_table) %>% 
+  unite(sample_genotype, run, genotype, sep = "_", remove = FALSE)
+# Plot
+ggplot(check_Ttn_counts_exons_samp_lg, 
+       aes(x = featureID, 
+           y = value, 
+           color = as.factor(genotype), 
+           shape = as.factor(sample_genotype))) +
+  geom_point() +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_shape_manual(values=seq(0,15)) +
+  ggtitle("R636Q - Ttn gene")
+# Select exon E16 to E20
+dplyr::filter(check_Ttn_counts_exons_samp_lg, featureID %in% paste0("E", 290:330)) %>% 
+  ggplot(., aes(x = featureID, 
+                y = value, 
+                color = as.factor(genotype), 
+                shape = as.factor(sample_genotype))) +
+  geom_point(cex = 3) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_shape_manual(values=seq(0,15)) +
+  ggtitle("R636Q - Ttn gene")
+dplyr::filter(check_Ttn_counts_exons_samp_lg, featureID %in% paste0("E", 300:310)) %>% 
+  ggplot(., aes(x = featureID, 
+                y = value, 
+                color = as.factor(genotype), 
+                shape = as.factor(sample_genotype),
+                label = sample_genotype)) +
+  geom_point(cex = 3) +
+  geom_text(hjust=0, vjust=0.2) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_shape_manual(values=seq(0,15)) +
+  ggtitle("R636Q - Ttn gene")
