@@ -1,0 +1,9 @@
+name: process_dcm_mouse_bulkRNA_rMATS
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+  - r
+dependencies:
+  - python
+  - rmats
