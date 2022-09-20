@@ -339,10 +339,29 @@ rule count_matrices:
   script:
     "scripts/DESeq_analysis_withSTARalignment_createcountmatrices.R"
     
-# rMATS
+# # rMATS
 # rule splicing_event_with_rMATS:
+#   input:
+#     gtf_file = "resources/gencode.vM29.annotation.gtf",
+#     wt_file = "results/rmats_directory/P635L_WT_files.txt",
+#     het_file = "results/rmats_directory/P635L_HET_files.txt"
+#   output:
+#     "A3SS.MATS.JC.txt",
+#     "A5SS.MATS.JC.txt",
+#     "MXE.MATS.JC.txt",
+#     "RI.MATS.JC.txt",
+#     "SE.MATS.JC.txt",
+#     dir = "results/rmats_directory/P635L_HETvsWT/"
 #   conda:
-#     "envs/process_dcm_mouse_bulkRNA.yml"
+#     "envs/process_dcm_mouse_bulkRNA_rMATS.yml"
+#   resources:
+#     mem_mb = "10G",
+#     time = "1-00:00:00"
+#   params:
+#     readLength = 160,
+#     typeread = "paired"
+#   threads:
+#     6
 #   shell:
-#     "python rmats.py --b1 results/STAR/P635L/21s003516/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003517/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003518/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003519/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003520/Aligned.sortedByCoord.out_sorted.bam --b2 results/STAR/P635L/21s003506/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003507/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003508/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003509/Aligned.sortedByCoord.out_sorted.bam,results/STAR/P635L/21s003510/Aligned.sortedByCoord.out_sorted.bam --gtf resources/gencode.vM29.annotation.gtf -t paired --readLength 50 --nthread 1 --od results/rMATs --tmp results/rMATs/tmp_output"
+#     "python /g/steinmetz/ferreira/software/miniconda3/envs/rMATS_env/rMATS/rmats.py --b1 {input.het_file} --b2 {input.wt_file} --gtf {input.gtf_file} -t {params.typeread} --readLength {params.readLength} --nthread {threads} --od {output.dir}"
 # conda activate rMATS_env
