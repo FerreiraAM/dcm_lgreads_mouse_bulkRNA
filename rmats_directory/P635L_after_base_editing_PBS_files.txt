@@ -1,0 +1,1 @@
+/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results/STAR/P635L_after_base_editing/22s002882/Aligned.sortedByCoord.out.bam,/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results/STAR/P635L_after_base_editing/22s002884/Aligned.sortedByCoord.out.bam,/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results/STAR/P635L_after_base_editing/22s002888/Aligned.sortedByCoord.out.bam
