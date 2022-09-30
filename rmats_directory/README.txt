@@ -25,12 +25,20 @@ python /g/steinmetz/ferreira/software/miniconda3/envs/rMATS_env/rMATS/rmats.py -
 python /g/steinmetz/ferreira/software/miniconda3/envs/rMATS_env/rMATS/rmats.py --b1 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5_files.txt --b2 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/P635L_after_base_editing_WT_files.txt --gtf resources/gencode.vM29.annotation.gtf -t paired --readLength 160 --nthread 1 --od rmats_directory/P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT
 # PBS vs WT
 python /g/steinmetz/ferreira/software/miniconda3/envs/rMATS_env/rMATS/rmats.py --b1 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/P635L_after_base_editing_PBS_files.txt --b2 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/P635L_after_base_editing_WT_files.txt --gtf resources/gencode.vM29.annotation.gtf -t paired --readLength 160 --nthread 1 --od rmats_directory/P635L_after_base_editing_PBSvsWT
+# PBS vs Nterm_SpRY_and_Cterm_SpRY_gRNA5
+python /g/steinmetz/ferreira/software/miniconda3/envs/rMATS_env/rMATS/rmats.py --b1 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/P635L_after_base_editing_PBS_files.txt --b2 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5_files.txt --gtf resources/gencode.vM29.annotation.gtf -t paired --readLength 160 --nthread 1 --od rmats_directory/P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5
+# PBS vs Nterm_NRTH_Abe8e_and_Cterm_gRNA5
+python /g/steinmetz/ferreira/software/miniconda3/envs/rMATS_env/rMATS/rmats.py --b1 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/P635L_after_base_editing_PBS_files.txt --b2 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_files.txt --gtf resources/gencode.vM29.annotation.gtf -t paired --readLength 160 --nthread 1 --od rmats_directory/P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5
+# Nterm_NRTH_Abe8e_and_Cterm_gRNA5 vs Nterm_SpRY_and_Cterm_SpRY_gRNA5
+python /g/steinmetz/ferreira/software/miniconda3/envs/rMATS_env/rMATS/rmats.py --b1 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_files.txt --b2 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5_files.txt --gtf resources/gencode.vM29.annotation.gtf -t paired --readLength 160 --nthread 1 --od rmats_directory/P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5/
+
 # R636Q
 # Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 vs WT
 python /g/steinmetz/ferreira/software/miniconda3/envs/rMATS_env/rMATS/rmats.py --b1 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_files.txt --b2 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/R636Q_after_base_editing_WT_files.txt --gtf resources/gencode.vM29.annotation.gtf -t paired --readLength 160 --nthread 1 --od rmats_directory/R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT
 # PBS vs WT
 python /g/steinmetz/ferreira/software/miniconda3/envs/rMATS_env/rMATS/rmats.py --b1 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/R636Q_after_base_editing_PBS_files.txt --b2 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/R636Q_after_base_editing_WT_files.txt --gtf resources/gencode.vM29.annotation.gtf -t paired --readLength 160 --nthread 1 --od rmats_directory/R636Q_after_base_editing_PBSvsWT
-
+# Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 vs PBS
+python /g/steinmetz/ferreira/software/miniconda3/envs/rMATS_env/rMATS/rmats.py --b1 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_files.txt --b2 /g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/rmats_directory/R636Q_after_base_editing_PBS_files.txt --gtf resources/gencode.vM29.annotation.gtf -t paired --readLength 160 --nthread 1 --od rmats_directory/R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS
 
 
 # Summary file available for older version
