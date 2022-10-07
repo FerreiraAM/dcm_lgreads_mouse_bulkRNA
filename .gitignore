@@ -1,3 +1,8 @@
 results/
 slurm_logs/
 .snakemake
+rmats_directory/*.pdf
+rmats_directory/*.rds
+rmats_directory/table*.txt
+rmats_directory/rmats*.txt
+rmats_directory/*vs*/
