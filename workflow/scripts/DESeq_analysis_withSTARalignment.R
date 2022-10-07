@@ -19,6 +19,8 @@ colnames(gen_vM29_annot_gene_uniq)[1] <- c("gene")
 
 # Load count matrices
 load("results/robject_featurecounts_allsamples.rda")
+imported_featurecounts_P635L <- readRDS("results/robject_featurecounts_P635L.rds")
+imported_featurecounts_R636Q <- readRDS("results/robject_featurecounts_R636Q.rds")
 # featurecounts_allsamples
 # Sample table
 sample_table <- read.table("/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/config/samples_metadata.txt",
@@ -31,8 +33,10 @@ sample_table$sample <- paste("results/STAR",
                              "Aligned.sortedByCoord.out.bam", sep = "/")
 
 # PCA
+# Merge data
 # Prepare data for PCA
-counts_all_mice <- t(featurecounts_allsamples$counts)
+# counts_all_mice <- t(featurecounts_allsamples$counts)
+counts_all_mice <- t(cbind(imported_featurecounts_P635L$counts, imported_featurecounts_R636Q$counts))
 counts_all_mice_wnames <- rownames_to_column(as.data.frame(counts_all_mice), var = "sample")
 counts_all_mice_wmeta <- left_join(counts_all_mice_wnames, sample_table)
 # Perform PCA
@@ -60,7 +64,8 @@ ggsave("results/plot_STARalignment_pca_all_mice_genes.pdf",
 # Filter 
 sample_table_P635L <- dplyr::filter(sample_table, mutant == "P635L")
 # Extract counts
-featurecounts_P635L <- featurecounts_allsamples$counts[,sample_table_P635L$sample]
+# featurecounts_P635L <- featurecounts_allsamples$counts[,sample_table_P635L$sample]
+featurecounts_P635L <- imported_featurecounts_P635L$counts
 # Check order
 if(all(colnames(featurecounts_P635L) == sample_table_P635L$sample)){
   colnames(featurecounts_P635L) <- sample_table_P635L$run
@@ -102,7 +107,8 @@ write.table(x = res_P635L_hetvswt_sig_withgenename,
 # Filter 
 sample_table_R636Q <- dplyr::filter(sample_table, mutant == "R636Q")
 # Extract counts
-featurecounts_R636Q <- featurecounts_allsamples$counts[,sample_table_R636Q$sample]
+# featurecounts_R636Q <- featurecounts_allsamples$counts[,sample_table_R636Q$sample]
+featurecounts_R636Q <- imported_featurecounts_R636Q$counts
 # Check order
 if(all(colnames(featurecounts_R636Q) == sample_table_R636Q$sample)){
   colnames(featurecounts_R636Q) <- sample_table_R636Q$run
@@ -144,7 +150,8 @@ write.table(x = res_R636Q_hetvswt_sig_withgenename,
 # Filter 
 sample_table_wt <- dplyr::filter(sample_table, genotype == "wt")
 # Extract counts
-featurecounts_wt <- featurecounts_allsamples$counts[,sample_table_wt$sample]
+# featurecounts_wt <- featurecounts_allsamples$counts[,sample_table_wt$sample]
+featurecounts_wt <- cbind(featurecounts_P635L, featurecounts_R636Q)[,sample_table_wt$sample]
 # Check order
 if(all(colnames(featurecounts_wt) == sample_table_wt$sample)){
   colnames(featurecounts_wt) <- sample_table_wt$run
@@ -368,11 +375,16 @@ write.table(geneexp_dds_P635LR636Q_hom_het_lg_wgenot_wwt_zeroreads_combined_shor
 # Filter gene list based on Markus list
 DEgenelist_p_inf_1e4 <- read.table("results/DEgenelist_p_inf_1e-4.txt")
 DEgenelist_p_inf_1e6 <- read.table("results/DEgenelist_p_inf_1e-6.txt")
+library(readxl)
+DEgenelist_p_inf_1e10 <- read_xlsx("results/GeneList_initialexp_forHeatMap_fromMarkus_09302022_common_genes_1e10_P635L_R636Q.xlsx", 
+                                  col_names = FALSE)
 # Merge with ensembl IDs
 DEgenelist_p_inf_1e4_wname <- left_join(data.frame("gene_name" = DEgenelist_p_inf_1e4[,1]), 
                                         gen_vM29_annot_gene_uniq)
 DEgenelist_p_inf_1e6_wname <- left_join(data.frame("gene_name" = DEgenelist_p_inf_1e6[,1]), 
                                         gen_vM29_annot_gene_uniq)
+DEgenelist_p_inf_1e10_wname <- left_join(data.frame("gene_name" = DEgenelist_p_inf_1e10$...1), 
+                                         gen_vM29_annot_gene_uniq)
 # Merge gene name with fold change and order genes according to the avg log2 FC
 fct_merge_FC_wgenename_and_order <- function(geneexp, DEgenelist){
   # Merge gene name with fold change
@@ -396,6 +408,11 @@ heatmap_data_P635L_hom_het_p_inf_1e6 <- fct_merge_FC_wgenename_and_order(
   geneexp = DEgenelist_p_inf_1e6_wname,
   DEgenelist = geneexp_dds_P635L_hom_het_lg_log2FC
 )
+# P635L p < 1e-10
+heatmap_data_P635L_hom_het_p_inf_1e10 <- fct_merge_FC_wgenename_and_order(
+  geneexp = DEgenelist_p_inf_1e10_wname,
+  DEgenelist = geneexp_dds_P635L_hom_het_lg_log2FC
+)
 # R636Q p < 1e-4
 heatmap_data_R636Q_hom_het_p_inf_1e4 <- fct_merge_FC_wgenename_and_order(
   geneexp = DEgenelist_p_inf_1e4_wname,
@@ -404,6 +421,11 @@ heatmap_data_R636Q_hom_het_p_inf_1e4 <- fct_merge_FC_wgenename_and_order(
 # R636Q p < 1e-6
 heatmap_data_R636Q_hom_het_p_inf_1e6 <- fct_merge_FC_wgenename_and_order(
   geneexp = DEgenelist_p_inf_1e6_wname,
+  DEgenelist = geneexp_dds_R636Q_hom_het_lg_log2FC
+)
+# R636Q p < 1e-10
+heatmap_data_R636Q_hom_het_p_inf_1e10 <- fct_merge_FC_wgenename_and_order(
+  geneexp = DEgenelist_p_inf_1e10_wname,
   DEgenelist = geneexp_dds_R636Q_hom_het_lg_log2FC
 )
 
@@ -429,6 +451,10 @@ heatmap_data_P635L_hom_het_p_inf_1e4_w <- fct_wide_gen_order(
 heatmap_data_P635L_hom_het_p_inf_1e6_w <- fct_wide_gen_order(
   heatmapdata = heatmap_data_P635L_hom_het_p_inf_1e6
 )
+# P635L p < 1e-10
+heatmap_data_P635L_hom_het_p_inf_1e10_w <- fct_wide_gen_order(
+  heatmapdata = heatmap_data_P635L_hom_het_p_inf_1e10
+)
 # R636Q p < 1e-4
 heatmap_data_R636Q_hom_het_p_inf_1e4_w <- fct_wide_gen_order(
   heatmapdata = heatmap_data_R636Q_hom_het_p_inf_1e4
@@ -436,6 +462,10 @@ heatmap_data_R636Q_hom_het_p_inf_1e4_w <- fct_wide_gen_order(
 # R636Q p < 1e-6
 heatmap_data_R636Q_hom_het_p_inf_1e6_w <- fct_wide_gen_order(
   heatmapdata = heatmap_data_R636Q_hom_het_p_inf_1e6
+)
+# R636Q p < 1e-10
+heatmap_data_R636Q_hom_het_p_inf_1e10_w <- fct_wide_gen_order(
+  heatmapdata = heatmap_data_R636Q_hom_het_p_inf_1e10
 )
 
 # Heatmaps
@@ -461,9 +491,20 @@ pheatmap(t(heatmap_data_P635L_hom_het_p_inf_1e6_w),
          fontsize_row = 2, 
          main = "P635L with DE genes p < 1e-6")
 dev.off()
+png("results/heatmap_STARalignment_P635L_hom_het_p_inf_1e10.png", 
+    width = 8, height = 20, units = "in", res = 1000)
+pheatmap(t(heatmap_data_P635L_hom_het_p_inf_1e10_w),
+         na_col = "black",
+         cluster_rows = FALSE, 
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         cluster_cols = FALSE,
+         fontsize_row = 2, 
+         main = "P635L with DE genes p < 1e-10")
+dev.off()
 # Order heatmap rows
-idx_R636Q_het <- grep("*het$", rownames(heatmap_data_R636Q_hom_het_p_inf_1e4_w))
-idx_R636Q_hom <- grep("*hom$", rownames(heatmap_data_R636Q_hom_het_p_inf_1e4_w))
+idx_R636Q_het <- grep("*het$", rownames(heatmap_data_R636Q_hom_het_p_inf_1e10_w))
+idx_R636Q_hom <- grep("*hom$", rownames(heatmap_data_R636Q_hom_het_p_inf_1e10_w))
 idx_R636Q <- c(idx_R636Q_hom, idx_R636Q_het)
 png("results/heatmap_STARalignment_R636Q_hom_het_p_inf_1e4.png", 
     width = 8, height = 20, units = "in", res = 1000)
@@ -487,6 +528,17 @@ pheatmap(t(heatmap_data_R636Q_hom_het_p_inf_1e6_w[idx_R636Q,]),
          fontsize_row = 2, 
          main = "R636Q with DE genes p < 1e-6")
 dev.off()
+png("results/heatmap_STARalignment_R636Q_hom_het_p_inf_1e10.png", 
+    width = 8, height = 20, units = "in", res = 1000)
+pheatmap(t(heatmap_data_R636Q_hom_het_p_inf_1e10_w[idx_R636Q,]),
+         na_col = "grey90",
+         cluster_rows = FALSE, 
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         cluster_cols = FALSE,
+         fontsize_row = 2, 
+         main = "R636Q with DE genes p < 1e-10")
+dev.off()
 
 # All individuals on one heatmap
 # p < 1e-4
@@ -507,12 +559,21 @@ heatmap_data_P635LR636Q_hom_het_p_inf_1e6_w <-
 rownames(heatmap_data_P635LR636Q_hom_het_p_inf_1e6_w) <-
   c(rownames(heatmap_data_P635L_hom_het_p_inf_1e6_w),
     rownames(heatmap_data_R636Q_hom_het_p_inf_1e6_w[idx_R636Q,]))
+# p < 1e-10
+heatmap_data_P635LR636Q_hom_het_p_inf_1e10_w <- 
+  merge(heatmap_data_P635L_hom_het_p_inf_1e10_w, 
+        heatmap_data_R636Q_hom_het_p_inf_1e10_w[idx_R636Q,],
+        all = TRUE, 
+        sort = FALSE)
+rownames(heatmap_data_P635LR636Q_hom_het_p_inf_1e10_w) <-
+  c(rownames(heatmap_data_P635L_hom_het_p_inf_1e10_w),
+    rownames(heatmap_data_R636Q_hom_het_p_inf_1e10_w[idx_R636Q,]))
 # Annotation
 annot_P635LR636Q <- data.frame(
   "genotype" = rep(rep(c("homozygote", "heterozygote"), each = 5), 2), 
   "mutation" = rep(c("P635L", "R636Q"), each = 10)
 )
-rownames(annot_P635LR636Q) <- rownames(heatmap_data_P635LR636Q_hom_het_p_inf_1e4_w)
+rownames(annot_P635LR636Q) <- rownames(heatmap_data_P635LR636Q_hom_het_p_inf_1e10_w)
 png("results/heatmap_STARalignment_P635LR636Q_hom_het_p_inf_1e4.png", 
     width = 8, height = 20, units = "in", res = 1000)
 pheatmap(t(heatmap_data_P635LR636Q_hom_het_p_inf_1e4_w),
@@ -535,6 +596,19 @@ pheatmap(t(heatmap_data_P635LR636Q_hom_het_p_inf_1e6_w),
          cluster_cols = FALSE,
          fontsize_row = 2, 
          main = "R636Q and P635L with DE genes p < 1e-6",
+         annotation_col = annot_P635LR636Q)
+dev.off()
+png("results/heatmap_STARalignment_P635LR636Q_hom_het_p_inf_1e10.png", 
+    width = 8, height = 20, units = "in", res = 1000)
+pheatmap(t(heatmap_data_P635LR636Q_hom_het_p_inf_1e10_w),
+         na_col = "grey58",
+         color=colorRampPalette(c("navy", "white", "red"))(50),
+         cluster_rows = FALSE, 
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         cluster_cols = FALSE,
+         fontsize_row = 6.5, 
+         main = "R636Q and P635L with DE genes p < 1e-10",
          annotation_col = annot_P635LR636Q)
 dev.off()
 
