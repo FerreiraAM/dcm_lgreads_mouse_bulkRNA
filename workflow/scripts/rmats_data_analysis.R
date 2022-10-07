@@ -40,6 +40,8 @@ fun_basic_stats <- function(df_files, fdr = 0.01){
        "nb_genes_sig" = nb_genes_sig)
 }
 
+##### Initial experiment #####
+
 # R636Q HOM vs WT
 # List files
 ls_R636Q_HOMvsWT_JC_filesname <- list.files(path = "rmats_directory/R636Q_HOMvsWT", 
@@ -139,6 +141,171 @@ write.table(df_P635L_HETvsWT_wo3511_JC_files,
 # Stats
 fun_basic_stats(df_P635L_HETvsWT_wo3511_JC_files)
 
+# Base editing experiments 
+
+# P635L Nterm_NRTH_Abe8e_and_Cterm_gRNA5 vs WT
+# P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT
+# List files
+ls_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_JC_filesname <- list.files(path = "rmats_directory/P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT", 
+                                                                                            pattern = "*JC.txt",
+                                                                                            full.names = TRUE)
+# Read files
+ls_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_JC_files <- fun_read_SJ(ls_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_JC_filesname)
+# Convert to a data.frame
+df_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_files <- fun_comb_in_df(ls_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_JC_files, 
+                                                                                         ls_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_JC_filesname)
+# Save file
+write.table(df_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_files, 
+            file = "rmats_directory/rmats_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_JC_files.txt",
+            col.names = TRUE,
+            row.names = FALSE)
+# Stats
+fun_basic_stats(df_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_files)
+
+# P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT
+# List files
+ls_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_JC_filesname <- list.files(path = "rmats_directory/P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT", 
+                                                                                           pattern = "*JC.txt",
+                                                                                           full.names = TRUE)
+# Read files
+ls_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_JC_files <- fun_read_SJ(ls_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_JC_filesname)
+# Convert to a data.frame
+df_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_files <- fun_comb_in_df(ls_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_JC_files, 
+                                                                                        ls_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_JC_filesname)
+# Save file
+write.table(df_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_files, 
+            file = "rmats_directory/rmats_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_JC_files.txt",
+            col.names = TRUE,
+            row.names = FALSE)
+# Stats
+fun_basic_stats(df_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_files)
+
+# P635L_after_base_editing_PBSvsWT
+# List files
+ls_P635L_after_base_editing_PBSvsWT_JC_filesname <- list.files(path = "rmats_directory/P635L_after_base_editing_PBSvsWT", 
+                                                               pattern = "*JC.txt",
+                                                               full.names = TRUE)
+# Read files
+ls_P635L_after_base_editing_PBSvsWT_JC_files <- fun_read_SJ(ls_P635L_after_base_editing_PBSvsWT_JC_filesname)
+# Convert to a data.frame
+df_P635L_after_base_editing_PBSvsWT_files <- fun_comb_in_df(ls_P635L_after_base_editing_PBSvsWT_JC_files, 
+                                                            ls_P635L_after_base_editing_PBSvsWT_JC_filesname)
+# Save file
+write.table(df_P635L_after_base_editing_PBSvsWT_files, 
+            file = "rmats_directory/rmats_P635L_after_base_editing_PBSvsWT_JC_files.txt",
+            col.names = TRUE,
+            row.names = FALSE)
+# Stats
+fun_basic_stats(df_P635L_after_base_editing_PBSvsWT_files)
+
+# R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT
+# List files
+ls_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_JC_filesname <- list.files(path = "rmats_directory/R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT", 
+                                                                                           pattern = "*JC.txt",
+                                                                                           full.names = TRUE)
+# Read files
+ls_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_JC_files <- fun_read_SJ(ls_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_JC_filesname)
+# Convert to a data.frame
+df_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_files <- fun_comb_in_df(ls_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_JC_files, 
+                                                                                        ls_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_JC_filesname)
+# Save file
+write.table(df_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_files, 
+            file = "rmats_directory/rmats_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_JC_files.txt",
+            col.names = TRUE,
+            row.names = FALSE)
+# Stats
+fun_basic_stats(df_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_files)
+
+# R636Q_after_base_editing_PBSvsWT
+# List files
+ls_R636Q_after_base_editing_PBSvsWT_JC_filesname <- list.files(path = "rmats_directory/R636Q_after_base_editing_PBSvsWT", 
+                                                               pattern = "*JC.txt",
+                                                               full.names = TRUE)
+# Read files
+ls_R636Q_after_base_editing_PBSvsWT_JC_files <- fun_read_SJ(ls_R636Q_after_base_editing_PBSvsWT_JC_filesname)
+# Convert to a data.frame
+df_R636Q_after_base_editing_PBSvsWT_files <- fun_comb_in_df(ls_R636Q_after_base_editing_PBSvsWT_JC_files, 
+                                                            ls_R636Q_after_base_editing_PBSvsWT_JC_filesname)
+# Save file
+write.table(df_R636Q_after_base_editing_PBSvsWT_files, 
+            file = "rmats_directory/rmats_R636Q_after_base_editing_PBSvsWT_JC_files.txt",
+            col.names = TRUE,
+            row.names = FALSE)
+# Stats
+fun_basic_stats(df_R636Q_after_base_editing_PBSvsWT_files)
+
+# R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS
+# List files
+ls_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS_JC_filesname <- list.files(path = "rmats_directory/R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS", 
+                                                               pattern = "*JC.txt",
+                                                               full.names = TRUE)
+# Read files
+ls_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS_JC_files <- fun_read_SJ(ls_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS_JC_filesname)
+# Convert to a data.frame
+df_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS_files <- fun_comb_in_df(ls_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS_JC_files, 
+                                                            ls_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS_JC_filesname)
+# Save file
+write.table(df_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS_files, 
+            file = "rmats_directory/rmats_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS_JC_files.txt",
+            col.names = TRUE,
+            row.names = FALSE)
+# Stats
+fun_basic_stats(df_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsPBS_files)
+
+# P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5
+# List files
+ls_P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_filesname <- list.files(path = "rmats_directory/P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5", 
+                                                                                                  pattern = "*JC.txt",
+                                                                                                  full.names = TRUE)
+# Read files
+ls_P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_files <- fun_read_SJ(ls_P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_filesname)
+# Convert to a data.frame
+df_P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5_files <- fun_comb_in_df(ls_P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_files, 
+                                                                                               ls_P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_filesname)
+# Save file
+write.table(df_P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5_files, 
+            file = "rmats_directory/rmats_P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_files.txt",
+            col.names = TRUE,
+            row.names = FALSE)
+# Stats
+fun_basic_stats(df_P635L_after_base_editing_PBSvsNterm_SpRY_and_Cterm_SpRY_gRNA5_files)
+
+# P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5
+# List files
+ls_P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5_JC_filesname <- list.files(path = "rmats_directory/P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5", 
+                                                                                            pattern = "*JC.txt",
+                                                                                            full.names = TRUE)
+# Read files
+ls_P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5_JC_files <- fun_read_SJ(ls_P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5_JC_filesname)
+# Convert to a data.frame
+df_P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5_files <- fun_comb_in_df(ls_P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5_JC_files, 
+                                                                                         ls_P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5_JC_filesname)
+# Save file
+write.table(df_P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5_files, 
+            file = "rmats_directory/rmats_P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5_JC_files.txt",
+            col.names = TRUE,
+            row.names = FALSE)
+# Stats
+fun_basic_stats(df_P635L_after_base_editing_PBSvsNterm_NRTH_Abe8e_and_Cterm_gRNA5_files)
+
+# P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5
+# List files
+ls_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_filesname <- list.files(path = "rmats_directory/P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5", 
+                                                                                             pattern = "*JC.txt",
+                                                                                             full.names = TRUE)
+# Read files
+ls_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_files <- fun_read_SJ(ls_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_filesname)
+# Convert to a data.frame
+df_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5_files <- fun_comb_in_df(ls_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_files, 
+                                                                                          ls_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_filesname)
+# Save file
+write.table(df_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5_files, 
+            file = "rmats_directory/rmats_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5_JC_files.txt",
+            col.names = TRUE,
+            row.names = FALSE)
+# Stats
+fun_basic_stats(df_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5_files)
+
 ###### Overlap ########
 # Run in the script rmats_data_analysis_cluster.R
 ls_sameevent_pergene <- readRDS(file = "rmats_directory/ls_sameevent_pergene.rds")
@@ -167,7 +334,7 @@ write.table(df_sameevent_pergene_sig,
 # Format
 # Filter values
 df_sameevent_pergene_sig_filtered <- dplyr::select(df_sameevent_pergene_sig,
-              geneSymbol, SJ_name, SJ_ID, mutant, comparison, IncLevelDifference)
+                                                   geneSymbol, SJ_name, SJ_ID, mutant, comparison, IncLevelDifference)
 # Combine columns
 df_sameevent_pergene_sig_filtered_tomat <- unite(df_sameevent_pergene_sig_filtered, 
                                                  gene_SJ, 
@@ -177,11 +344,11 @@ df_sameevent_pergene_sig_filtered_tomat <- unite(df_sameevent_pergene_sig_filter
                                                  mutant, comparison)
 # Pivot wider
 df_sameevent_pergene_sig_filtered_tomat_w <- pivot_wider(df_sameevent_pergene_sig_filtered_tomat,
-            names_from = mutant_comparison,
-            values_from = IncLevelDifference)
+                                                         names_from = mutant_comparison,
+                                                         values_from = IncLevelDifference)
 # Rownames
 mat_sameevent_pergene_sig_filtered_w <- column_to_rownames(df_sameevent_pergene_sig_filtered_tomat_w,
-                   var = "gene_SJ")
+                                                           var = "gene_SJ")
 # Plot
 pdf("rmats_directory/heatmap_rmats_allSJs_common_siginHOMvsWT.pdf", width = 6, height = 7)
 pheatmap(mat_sameevent_pergene_sig_filtered_w,
@@ -189,15 +356,574 @@ pheatmap(mat_sameevent_pergene_sig_filtered_w,
          main = "All significant SJs common in HOM vs WT comparisons found in the 4 comparisons")
 dev.off()
 
-# Most significant SJ common in HOM vs WT comparisons found in the 4 comparisons
+# P635L HET, P635L HOM, R636Q HET, R636Q HOM
+# rename(mat_sameevent_pergene_sig_filtered_w, 
+#        "P635L HOM" = P635L_HOMvsWT,
+#        "R636Q HOM" = R636Q_HOMvsWT,
+#        "P635L HET" = P635L_HETvsWT,
+#        "R636Q HET" = R636Q_HETvsWT)
+pdf("rmats_directory/DRAFT_heatmap_rmats_allSJs_common_siginHOMvsWT.pdf", width = 11, height = 3)
+pheatmap(t(mat_sameevent_pergene_sig_filtered_w[,c("P635L_HETvsWT",
+                                                   "P635L_HOMvsWT",
+                                                   "R636Q_HETvsWT",
+                                                   "R636Q_HOMvsWT")]),
+         color=colorRampPalette(c("navy", "white", "red"))(50),
+         fontsize_col = 7,
+         cluster_rows = FALSE,
+         labels_row = c("P635L HET", "P635L HOM", "R636Q HET", "R636Q HOM"),
+         labels_col = sub("_.*", "", rownames(mat_sameevent_pergene_sig_filtered_w)))
+dev.off()
+
+# Add SJ not overlaping but important genes
+# Cryab
+# Hdnr
+# Hectd2os
+# Mia2
+# Ryr2
+# Slmap
+# Usp48
+# Add a column in each dataframe
+df_P635L_HOMvsWT_JC_files$mutant <- "P635L"
+df_P635L_HOMvsWT_JC_files$comparison <- "HOMvsWT"
+df_R636Q_HOMvsWT_JC_files$mutant <- "R636Q"
+df_R636Q_HOMvsWT_JC_files$comparison <- "HOMvsWT"
+df_P635L_HETvsWT_JC_files$mutant <- "P635L"
+df_P635L_HETvsWT_JC_files$comparison <- "HETvsWT"
+df_R636Q_HETvsWT_JC_files$mutant <- "R636Q"
+df_R636Q_HETvsWT_JC_files$comparison <- "HETvsWT"
+# Intersect all
+intersect_all_genesymbol <- Reduce(intersect, list(unique(df_P635L_HOMvsWT_JC_files$geneSymbol),
+                                                   unique(df_R636Q_HOMvsWT_JC_files$geneSymbol),
+                                                   unique(df_P635L_HETvsWT_JC_files$geneSymbol),
+                                                   unique(df_R636Q_HETvsWT_JC_files$geneSymbol)))
+# Combine
+df_all_JC_files <- rbind(df_P635L_HOMvsWT_JC_files,
+                         df_R636Q_HOMvsWT_JC_files,
+                         df_P635L_HETvsWT_JC_files,
+                         df_R636Q_HETvsWT_JC_files)
+# Filtering
+# Common gene symbols
+df_all_JC_files_common_genesymbols <- dplyr::filter(df_all_JC_files, 
+                                                    geneSymbol %in% intersect_all_genesymbol)
+# Filter the one missing
+miss_genes <- c("Cryab", "Hdnr", "Hectd2os", "Mia2", "Ryr2", "Usp48")
+df_miss_genes_sig <- dplyr::filter(df_all_JC_files_common_genesymbols, geneSymbol %in% miss_genes) %>% 
+  group_by(geneSymbol, SJ_name, longExonStart_0base, longExonEnd,
+           shortES, shortEE, flankingES, flankingEE,
+           X1stExonStart_0base, X1stExonEnd, X2ndExonStart_0base, X2ndExonEnd, upstreamES, upstreamEE, downstreamES, downstreamEE,
+           riExonEnd, exonStart_0base, exonEnd) %>% 
+  dplyr::filter((all(FDR[comparison == "HOMvsWT"] < 0.01) | all(FDR[comparison == "HOMvsWT"] == 0)) &
+                  (all(IncLevelDifference[comparison == "HOMvsWT"] < -0.1) | 
+                     all(IncLevelDifference[comparison == "HOMvsWT"] > 0.1)))
+# Add SJ IDs
+df_miss_genes_sig <- df_miss_genes_sig %>% 
+  group_by(geneSymbol, SJ_name, longExonStart_0base, longExonEnd,
+           shortES, shortEE, flankingES, flankingEE,
+           X1stExonStart_0base, X1stExonEnd, X2ndExonStart_0base, X2ndExonEnd, upstreamES, upstreamEE, downstreamES, downstreamEE,
+           riExonEnd, exonStart_0base, exonEnd) %>% 
+  mutate(SJ_ID = cur_group_id())
+# Filter for SJ events found more than once
+df_miss_genes_sig <- df_miss_genes_sig %>% 
+  group_by(SJ_ID) %>% 
+  dplyr::filter(n() > 1)
 # Format
 # Filter values
-df_sameevent_pergene_sig %>% 
-  group_by(geneSymbol) %>% 
-  slice_min(FDR[comparison == "HOMvsWT"])
-  
-  
-  
-  
-  
-  
+df_miss_genes_sig_filtered <- df_miss_genes_sig[,c("geneSymbol", "SJ_name", "SJ_ID", "mutant", 
+                                                  "comparison", "IncLevelDifference")]
+# Combine columns
+df_miss_genes_sig_filtered_tomat <- unite(df_miss_genes_sig_filtered, 
+                                                 gene_SJ, 
+                                                 geneSymbol, SJ_name, SJ_ID)
+df_miss_genes_sig_filtered_tomat <- unite(df_miss_genes_sig_filtered_tomat, 
+                                                 mutant_comparison, 
+                                                 mutant, comparison)
+# Pivot wider
+df_miss_genes_sig_filtered_tomat_w <- pivot_wider(df_miss_genes_sig_filtered_tomat,
+                                                         names_from = mutant_comparison,
+                                                         values_from = IncLevelDifference)
+# Rownames
+mat_miss_genes_sig_sig_filtered_w <- column_to_rownames(df_miss_genes_sig_filtered_tomat_w,
+                                                           var = "gene_SJ")
+# Combine data
+comb_SJevent_withmissgenes_sig_filtered_w <- bind_rows(mat_sameevent_pergene_sig_filtered_w,
+      mat_miss_genes_sig_sig_filtered_w)
+pdf("rmats_directory/VF_heatmap_rmats_allSJs_common_and_missinggenes_siginHOMvsWT.pdf", 
+    width = 4, height = 11)
+pheatmap(comb_SJevent_withmissgenes_sig_filtered_w[,c("P635L_HETvsWT",
+                                                   "P635L_HOMvsWT",
+                                                   "R636Q_HETvsWT",
+                                                   "R636Q_HOMvsWT")],
+         color=colorRampPalette(c("navy", "white", "red"))(50),
+         fontsize = 13,
+         cluster_cols = FALSE,
+         labels_col = c("P635L HET", "P635L HOM", "R636Q HET", "R636Q HOM"),
+         labels_row = sub("_.*", "", rownames(comb_SJevent_withmissgenes_sig_filtered_w)),
+         na_col = "gray58")
+dev.off()
+
+
+
+# identifying the significant SJ events between PBS vs WT for R636Q 
+# and looking into them in the other treatment 
+# --> try some plotting options
+# Merge PBSvsWT comparison with Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT
+# Add a column in each dataframe
+df_R636Q_after_base_editing_PBSvsWT_files$mutant <- "R636Q_after_base_editing"
+df_R636Q_after_base_editing_PBSvsWT_files$comparison <- "PBSvsWT"
+df_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_files$mutant <- "R636Q_after_base_editing"
+df_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_files$comparison <- "Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6"
+# Combine
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <- rbind(df_R636Q_after_base_editing_PBSvsWT_files, 
+                                                                              df_R636Q_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6vsWT_files)
+# Add SJ ID
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <- df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 %>% 
+  group_by(geneSymbol, SJ_name, longExonStart_0base, longExonEnd,
+           shortES, shortEE, flankingES, flankingEE,
+           X1stExonStart_0base, X1stExonEnd, X2ndExonStart_0base, X2ndExonEnd, upstreamES, upstreamEE, downstreamES, downstreamEE,
+           riExonEnd, exonStart_0base, exonEnd) %>% 
+  mutate(SJ_ID = cur_group_id())
+# Filter for SJ events found more than once
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1 <- df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 %>% 
+  group_by(SJ_ID) %>% 
+  dplyr::filter(n() > 1)
+# Significant
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig <- df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1 %>% 
+  group_by(SJ_ID) %>% 
+  dplyr::filter((all(FDR[comparison == "PBSvsWT"] < 0.01) | all(FDR[comparison == "PBSvsWT"] == 0)) &
+                  (all(IncLevelDifference[comparison == "PBSvsWT"] < -0.1) | 
+                     all(IncLevelDifference[comparison == "PBSvsWT"] > 0.1)))
+# Order factor
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig <- df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig %>% 
+  mutate(comparison = factor(comparison, levels = c("PBSvsWT", "Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6")))
+# Write
+write.table(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig,
+            file = "rmats_directory/table_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig.txt",
+            row.names = FALSE)
+# Wide format for Markus
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd <- df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig %>% 
+  dplyr::select(geneSymbol, SJ_ID, IncLevelDifference, comparison) %>% 
+  pivot_wider(names_from = comparison, values_from = IncLevelDifference)
+write.table(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd,
+            file = "rmats_directory/table_df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd.txt",
+            row.names = FALSE)
+# # Plot
+# pdf("rmats_directory/DRAFT_R636Q_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6.pdf", width = 10, height = 6)
+# ggplot(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig,
+#        aes(x = comparison, y = IncLevelDifference, color = geneSymbol, group = SJ_ID)) +
+#   geom_point() +
+#   geom_line() + 
+#   theme_bw()
+# dev.off()
+# # dplyr::filter(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig, geneSymbol == "Abcf1") %>% 
+# #   dplyr::select(FDR, IncLevelDifference, comparison)
+# 
+# # Add a column to color only Ttn
+# df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_ttn <- df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig %>% 
+#   mutate("Ttn" = geneSymbol == "Ttn")
+# pdf("rmats_directory/DRAFT_R636Q_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6.pdf", 
+#     width = 6, height = 6)
+# ggplot(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_ttn,
+#        aes(x = comparison, y = IncLevelDifference, group = SJ_ID)) +
+#   geom_point(aes(color=Ttn)) +
+#   geom_line(aes(color=Ttn)) +
+#   theme_bw() +
+#   scale_color_manual(values = c("black", "red")) +
+#   ggtitle("R636Q")
+# dev.off()
+
+
+# SJ events classification
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd_delta <- 
+  df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd %>% 
+  mutate(diff = PBSvsWT - Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6)
+# # Classification function --> does not work; dplyr BUGGGGGG
+# fun_classification_SJevents <- function(df_data, x_original, x_edited){
+#   df_class <- df_data %>% 
+#     dplyr::rowwise() %>% 
+#     # mutate(SJ_type = if_else((x_edited) <= 0, "rescue", "nope"))
+#   dplyr::mutate(SJ_type = case_when(abs(diff) > 0.1 & (x_original) > 0 & (x_edited) >= 0 & (x_original) > (x_edited) ~ "rescue",
+#                            abs(diff) > 0.1 & (x_original) < 0 & (x_edited) <= 0 & (x_original) < (x_edited) ~ "rescue",
+#                            abs(diff) > 0.1 & (x_original) > 0 & (x_edited) >= 0 & (x_original) < (x_edited) ~ "reversal",
+#                            abs(diff) > 0.1 & (x_original) < 0 & (x_edited) <= 0 & (x_original) > (x_edited) ~ "reversal",
+#                            abs(diff) > 0.1 & (x_original) > 0 & (x_edited) <= 0 & (x_original) > (x_edited) &
+#                              ((x_edited) >= -0.2 & (x_edited) <= 0.2) ~ "rescue",
+#                            abs(diff) > 0.1 & (x_original) > 0 & (x_edited) <= 0 & (x_original) > (x_edited) &
+#                              ((x_edited) < -0.2 | (x_edited) > 0.2) ~ "reversal",
+#                            abs(diff) > 0.1 & (x_original) < 0 & (x_edited) >= 0 & (x_original) < (x_edited) &
+#                              ((x_edited) >= -0.2 & (x_edited) <= 0.2) ~ "rescue",
+#                            abs(diff) > 0.1 & (x_original) < 0 & (x_edited) >= 0 & (x_original) < (x_edited) &
+#                              ((x_edited) < -0.2 | ((x_edited)) > 0.2) ~ "reversal"))
+#   # Replace NA
+#   replace_na(df_class, list(SJ_type = "diff_inf_0.1"))
+# }
+# R636Q
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd_delta <- 
+  df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd_delta %>% 
+  mutate(SJ_type = case_when(abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= 0 & PBSvsWT > Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0 & PBSvsWT < Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= 0 & PBSvsWT < Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 ~ "reversal",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0 & PBSvsWT > Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 ~ "reversal",
+                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0 & 
+                               PBSvsWT > (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6) & 
+                               (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= -0.2 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0.2) ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0 & 
+                               PBSvsWT > (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6) & 
+                               (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 > 0.2) ~ "reversal",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= 0 & 
+                               (PBSvsWT) < Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 & 
+                               (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= -0.2 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0.2) ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= 0 & 
+                               (PBSvsWT) < Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 & 
+                               (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 > 0.2) ~ "reversal"))
+# Replace NA 
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd_delta <- 
+  df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd_delta %>% 
+  replace_na(list(SJ_type = "diff_inf_0.1"))
+# long format to plot
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_lg_delta <- pivot_longer(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd_delta,
+             cols = c(PBSvsWT, Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6),
+             names_to = "comparison",
+             values_to = "IncLevelDifference")
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_lg_delta <- 
+  df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_lg_delta %>% 
+  mutate(comparison = factor(comparison, levels = c("PBSvsWT", "Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6")))
+# Add Ttn column
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_lg_delta_ttn <- 
+  df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_lg_delta %>% 
+  mutate("Ttn" = geneSymbol == "Ttn")
+# Add color variable
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_lg_delta_ttn <- 
+  df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_lg_delta_ttn %>% 
+  mutate(plot_color = if_else(Ttn == TRUE, true = "Ttn", false = as.character(SJ_type)))
+# Factor order
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_lg_delta_ttn <- 
+  df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_lg_delta_ttn %>% 
+  mutate(SJ_type = factor(SJ_type, levels = c("rescue", "reversal", "diff_inf_0.1")))
+# Plot
+pdf("rmats_directory/VF_R636Q_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_deltadeltaPSI_facet.pdf", 
+    width = 4, height = 6)
+ggplot(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_lg_delta_ttn,
+       aes(x = comparison, y = IncLevelDifference, group = SJ_ID, color = plot_color)) +
+  geom_point(alpha = 0.6, aes(size = plot_color)) +
+  geom_line(alpha = 0.6, aes(size = plot_color)) + 
+  facet_wrap(vars(SJ_type), strip.position="right", ncol = 1, labeller = as_labeller(c("rescue" = "Rescue",
+                                                             "reversal" = "Mis-spliced", 
+                                                             "diff_inf_0.1" = "Unchanged"))) +
+  theme_bw() +
+  theme(strip.background = element_rect(fill = "white")) +
+  scale_color_manual(name = NULL, 
+                     values = c("diff_inf_0.1" = "gray58", "rescue" = "red", "reversal" = "gray30", "Ttn" = "blue"),
+                     breaks = c("Ttn")) +
+  scale_size_manual(guide = 'none', values = c(0.2, 0.2, 0.2, 0.8)) +
+  ggtitle("R636Q") +
+  ylab("Delta delta PSI") +
+  scale_x_discrete(name = element_blank(), 
+                   labels = c("PBS", "Abe8e")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  annotate("rect", xmin = 0, xmax = 3, ymin = -0.2, ymax = 0.2, 
+           alpha = .2) +
+  guides(colour = guide_legend(override.aes = list(alpha = 1,
+                                                   linetype = NULL,
+                                                   size = 2))) 
+dev.off()
+
+# identifying the significant SJ events between PBS vs WT for P635L and looking into them in the other treatment 
+# --> try some plotting options
+# Merge PBSvsWT comparison with Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT
+# Add a column in each dataframe
+df_P635L_after_base_editing_PBSvsWT_files$mutant <- "P635L_after_base_editing"
+df_P635L_after_base_editing_PBSvsWT_files$comparison <- "PBSvsWT"
+df_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_files$mutant <- "P635L_after_base_editing"
+df_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_files$comparison <- "Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT"
+# Combine
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5 <- rbind(df_P635L_after_base_editing_PBSvsWT_files, 
+                                                                              df_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_files)
+# Add SJ ID
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5 <- df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5 %>% 
+  group_by(geneSymbol, SJ_name, longExonStart_0base, longExonEnd,
+           shortES, shortEE, flankingES, flankingEE,
+           X1stExonStart_0base, X1stExonEnd, X2ndExonStart_0base, X2ndExonEnd, upstreamES, upstreamEE, downstreamES, downstreamEE,
+           riExonEnd, exonStart_0base, exonEnd) %>% 
+  mutate(SJ_ID = cur_group_id())
+# Filter for SJ events found more than once
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1 <- df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5 %>% 
+  group_by(SJ_ID) %>% 
+  dplyr::filter(n() > 1)
+# Significant
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig <- df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1 %>% 
+  group_by(SJ_ID) %>% 
+  dplyr::filter((all(FDR[comparison == "PBSvsWT"] < 0.01) | all(FDR[comparison == "PBSvsWT"] == 0)) &
+                  (all(IncLevelDifference[comparison == "PBSvsWT"] < -0.1) | 
+                     all(IncLevelDifference[comparison == "PBSvsWT"] > 0.1)))
+# Order factor
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig <- df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig %>% 
+  mutate(comparison = factor(comparison, levels = c("PBSvsWT", "Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT")))
+# Write
+write.table(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig,
+            file = "rmats_directory/table_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig.txt",
+            row.names = FALSE)
+# Wide format for Markus
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd <- df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig %>% 
+  dplyr::select(geneSymbol, SJ_ID, IncLevelDifference, comparison) %>% 
+  pivot_wider(names_from = comparison, values_from = IncLevelDifference)
+write.table(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd,
+            file = "rmats_directory/table_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd.txt",
+            row.names = FALSE)
+
+# # Plot
+# pdf("rmats_directory/DRAFT_P635L_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5.pdf", width = 10, height = 6)
+# ggplot(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig,
+#        aes(x = comparison, y = IncLevelDifference, group = SJ_ID)) +
+#   geom_point() +
+#   geom_line() + 
+#   theme_bw()
+# dev.off()
+# # dplyr::filter(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig, geneSymbol == "Abcf1") %>% 
+# #   dplyr::select(FDR, IncLevelDifference, comparison)
+# 
+# # Add a column to color only Ttn
+# df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_ttn <- df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig %>% 
+#   mutate("Ttn" = geneSymbol == "Ttn")
+# pdf("rmats_directory/DRAFT_P635L_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5.pdf", 
+#     width = 6, height = 6)
+# ggplot(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_ttn,
+#        aes(x = comparison, y = IncLevelDifference, group = SJ_ID)) +
+#   geom_point(aes(color=Ttn)) +
+#   geom_line(aes(color=Ttn)) +
+#   theme_bw() +
+#   scale_color_manual(values = c("black", "red")) + 
+#   ggtitle("P635L")
+# dev.off()
+
+# SJ events classification
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd_delta <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd %>% 
+  mutate(diff = PBSvsWT - Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT) 
+# P635L
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd_delta <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd_delta %>% 
+  mutate(SJ_type = case_when(abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT >= 0 & PBSvsWT > Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0 & PBSvsWT < Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT >= 0 & PBSvsWT < Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT ~ "reversal",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0 & PBSvsWT > Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT ~ "reversal",
+                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0 & 
+                               PBSvsWT > (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT) & 
+                               (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT >= -0.2 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0.2) ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0 & 
+                               PBSvsWT > (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT) & 
+                               (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT > 0.2) ~ "reversal",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT >= 0 & 
+                               (PBSvsWT) < Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT & 
+                               (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT >= -0.2 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0.2) ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT >= 0 & 
+                               (PBSvsWT) < Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT & 
+                               (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT > 0.2) ~ "reversal"))
+# Replace NA 
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd_delta <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd_delta %>% 
+  replace_na(list(SJ_type = "diff_inf_0.1"))
+# long format to plot
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_SJmore1_sig_lg_delta <- pivot_longer(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd_delta,
+                                                                                                               cols = c(PBSvsWT, Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT),
+                                                                                                               names_to = "comparison",
+                                                                                                               values_to = "IncLevelDifference")
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_SJmore1_sig_lg_delta <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_SJmore1_sig_lg_delta %>% 
+  mutate(comparison = factor(comparison, levels = c("PBSvsWT", "Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT")))
+# Add Ttn column
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_SJmore1_sig_lg_delta_ttn <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_SJmore1_sig_lg_delta %>% 
+  mutate("Ttn" = geneSymbol == "Ttn")
+# Add color variable
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_SJmore1_sig_lg_delta_ttn <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_SJmore1_sig_lg_delta_ttn %>% 
+  mutate(plot_color = if_else(Ttn == TRUE, true = "Ttn", false = as.character(SJ_type)))
+# Factor order
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_SJmore1_sig_lg_delta_ttn <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_SJmore1_sig_lg_delta_ttn %>% 
+  mutate(SJ_type = factor(SJ_type, levels = c("rescue", "reversal", "diff_inf_0.1")))
+# Plot
+pdf("rmats_directory/VF_P635L_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_deltadeltaPSI_facet.pdf", 
+    width = 4, height = 6)
+ggplot(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_SJmore1_sig_lg_delta_ttn,
+       aes(x = comparison, y = IncLevelDifference, group = SJ_ID, color = plot_color)) +
+  geom_point(alpha = 0.6, aes(size = plot_color)) +
+  geom_line(alpha = 0.6, aes(size = plot_color)) + 
+  facet_wrap(vars(SJ_type), strip.position="right", ncol = 1, labeller = as_labeller(c("rescue" = "Rescue",
+                                                                                       "reversal" = "Mis-spliced", 
+                                                                                       "diff_inf_0.1" = "Unchanged"))) +
+  theme_bw() +
+  theme(strip.background = element_rect(fill = "white")) +
+  scale_color_manual(name = NULL, 
+                     values = c("diff_inf_0.1" = "gray58", "rescue" = "red", "reversal" = "gray30", "Ttn" = "blue"),
+                     breaks = c("Ttn")) +
+  scale_size_manual(guide = 'none', values = c(0.2, 0.2, 0.2, 0.8)) +
+  ggtitle("P635L") +
+  ylab("Delta delta PSI") +
+  scale_x_discrete(name = element_blank(), 
+                   labels = c("PBS", "Abe8e")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  annotate("rect", xmin = 0, xmax = 3, ymin = -0.2, ymax = 0.2, 
+           alpha = .2) +
+  guides(colour = guide_legend(override.aes = list(alpha = 1,
+                                                   linetype = NULL,
+                                                   size = 2))) 
+dev.off()
+
+# Add column
+df_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_files$mutant <- "P635L_after_base_editing"
+df_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_files$comparison <- "Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT"
+# Combine
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5 <- rbind(df_P635L_after_base_editing_PBSvsWT_files, 
+                                                                             df_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_files)
+# Add SJ ID
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5 <- df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5 %>% 
+  group_by(geneSymbol, SJ_name, longExonStart_0base, longExonEnd,
+           shortES, shortEE, flankingES, flankingEE,
+           X1stExonStart_0base, X1stExonEnd, X2ndExonStart_0base, X2ndExonEnd, upstreamES, upstreamEE, downstreamES, downstreamEE,
+           riExonEnd, exonStart_0base, exonEnd) %>% 
+  mutate(SJ_ID = cur_group_id())
+# Filter for SJ events found more than once
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1 <- df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5 %>% 
+  group_by(SJ_ID) %>% 
+  dplyr::filter(n() > 1)
+# Significant
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig <- df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1 %>% 
+  group_by(SJ_ID) %>% 
+  dplyr::filter((all(FDR[comparison == "PBSvsWT"] < 0.01) | all(FDR[comparison == "PBSvsWT"] == 0)) &
+                  (all(IncLevelDifference[comparison == "PBSvsWT"] < -0.1) | 
+                     all(IncLevelDifference[comparison == "PBSvsWT"] > 0.1)))
+# Order factor
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig <- df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig %>% 
+  mutate(comparison = factor(comparison, levels = c("PBSvsWT", "Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT")))
+# Write
+write.table(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig,
+            file = "rmats_directory/table_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig.txt",
+            row.names = FALSE)
+# Wide format for Markus
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd <- df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig %>% 
+  dplyr::select(geneSymbol, SJ_ID, IncLevelDifference, comparison) %>% 
+  pivot_wider(names_from = comparison, values_from = IncLevelDifference)
+write.table(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd,
+            file = "rmats_directory/table_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd.txt",
+            row.names = FALSE)
+
+# # Plot
+# # Add a column to color only Ttn
+# df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_ttn <- df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig %>% 
+#   mutate("Ttn" = geneSymbol == "Ttn")
+# pdf("rmats_directory/DRAFT_P635L_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5.pdf", 
+#     width = 6, height = 6)
+# ggplot(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_ttn,
+#        aes(x = comparison, y = IncLevelDifference, group = SJ_ID)) +
+#   geom_point(aes(color=Ttn)) +
+#   geom_line(aes(color=Ttn)) +
+#   theme_bw() +
+#   scale_color_manual(values = c("black", "red")) + 
+#   ggtitle("P635L")
+# dev.off() 
+
+# SJ events classification
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd_delta <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd %>% 
+  mutate(diff = PBSvsWT - Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT) 
+# P635L
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd_delta <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd_delta %>% 
+  mutate(SJ_type = case_when(abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT >= 0 & PBSvsWT > Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0 & PBSvsWT < Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT >= 0 & PBSvsWT < Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT ~ "reversal",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0 & PBSvsWT > Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT ~ "reversal",
+                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0 & 
+                               PBSvsWT > (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT) & 
+                               (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT >= -0.2 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0.2) ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0 & 
+                               PBSvsWT > (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT) & 
+                               (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT < -0.2 | Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT > 0.2) ~ "reversal",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT >= 0 & 
+                               (PBSvsWT) < Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT & 
+                               (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT >= -0.2 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0.2) ~ "rescue",
+                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT >= 0 & 
+                               (PBSvsWT) < Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT & 
+                               (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT < -0.2 | Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT > 0.2) ~ "reversal"))
+# Replace NA 
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd_delta <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd_delta %>% 
+  replace_na(list(SJ_type = "diff_inf_0.1"))
+# long format to plot
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta <- pivot_longer(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd_delta,
+                                                                                                              cols = c(PBSvsWT, Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT),
+                                                                                                              names_to = "comparison",
+                                                                                                              values_to = "IncLevelDifference")
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta %>% 
+  mutate(comparison = factor(comparison, levels = c("PBSvsWT", "Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT")))
+# Add Ttn column
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta_ttn <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta %>% 
+  mutate("Ttn" = geneSymbol == "Ttn")
+# Add color variable
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta_ttn <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta_ttn %>% 
+  mutate(plot_color = if_else(Ttn == TRUE, true = "Ttn", false = as.character(SJ_type)))
+# Factor order
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta_ttn <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta_ttn %>% 
+  mutate(SJ_type = factor(SJ_type, levels = c("rescue", "reversal", "diff_inf_0.1")))
+# Plot
+pdf("rmats_directory/VF_P635L_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_deltadeltaPSI_facet.pdf", 
+    width = 4, height = 6)
+ggplot(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta_ttn,
+       aes(x = comparison, y = IncLevelDifference, group = SJ_ID, color = plot_color)) +
+  geom_point(alpha = 0.6, aes(size = plot_color)) +
+  geom_line(alpha = 0.6, aes(size = plot_color)) + 
+  facet_wrap(vars(SJ_type), strip.position="right", ncol = 1, labeller = as_labeller(c("rescue" = "Rescue",
+                                                                                       "reversal" = "Mis-spliced", 
+                                                                                       "diff_inf_0.1" = "Unchanged"))) +
+  theme_bw() +
+  theme(strip.background = element_rect(fill = "white")) +
+  scale_color_manual(name = NULL, 
+                     values = c("diff_inf_0.1" = "gray58", "rescue" = "red", "reversal" = "gray30", "Ttn" = "blue"),
+                     breaks = c("Ttn")) +
+  scale_size_manual(guide = 'none', values = c(0.2, 0.2, 0.2, 0.8)) +
+  ggtitle("P635L") +
+  ylab("Delta delta PSI") +
+  scale_x_discrete(name = element_blank(), 
+                   labels = c("PBS", "SpRY")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  annotate("rect", xmin = 0, xmax = 3, ymin = -0.2, ymax = 0.2, 
+           alpha = .2) +
+  guides(colour = guide_legend(override.aes = list(alpha = 1,
+                                                   linetype = NULL,
+                                                   size = 2))) 
+dev.off()
+
+
+
+# Number of events in each category
+df_nbevents_per_class <- bind_rows(data.frame("mutant" = "P635L", 
+                     "comparison" = "PBS - SpRy",
+                     table(unique(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta_ttn[,c("SJ_ID", "SJ_type")])$SJ_type)),
+          data.frame("mutant" = "P635L", 
+                     "comparison" = "PBS - Abe8e",
+                     table(unique(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_SJmore1_sig_lg_delta_ttn[,c("SJ_ID", "SJ_type")])$SJ_type)), 
+          data.frame("mutant" = "R636Q", 
+                     "comparison" = "PBS - Abe8e",
+                     table(unique(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_lg_delta_ttn[,c("SJ_ID", "SJ_type")])$SJ_type)))
+# Modify names
+df_nbevents_per_class <- mutate(df_nbevents_per_class, 
+       Var1 = case_when(Var1 == "reversal" ~ "Mis-spliced",
+                        Var1 == "rescue" ~ "Rescue",
+                        Var1 == "diff_inf_0.1" ~ "Unchanged"))
+# wide format
+df_nbevents_per_class_wd <- 
+  pivot_wider(df_nbevents_per_class, 
+              id_cols = c("mutant", "comparison"), 
+              names_from = "Var1", 
+              values_from = "Freq")
+write.table(df_nbevents_per_class_wd,
+            file = "rmats_directory/table_nbevents_per_class.txt",
+            col.names = TRUE,
+            row.names = FALSE)
+
+
