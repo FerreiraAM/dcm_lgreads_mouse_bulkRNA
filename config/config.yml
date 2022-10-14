@@ -88,5 +88,11 @@ strand:
   R636Q: 2 # reversely stranded
   P635L_after_base_editing: 0 # unstranded
   R636Q_after_base_editing: 0 # unstranded
-  
+
+# Regions of the mutation
+mutation_regions:
+  P635L: "chr19:53831591-53831751"
+  P635L_after_base_editing: "chr19:53831591-53831751"
+  R636Q: "chr19:53831594-53831754"
+  R636Q_after_base_editing: "chr19:53831594-53831754"
   

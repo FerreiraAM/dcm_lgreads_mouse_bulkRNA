@@ -55,16 +55,18 @@ rule all_create_bam_idx:
     expand("results/STAR/P635L/{sample}/Aligned.sortedByCoord.out.bam.bai", sample = config["samples"]["P635L"]),
     expand("results/STAR/R636Q/{sample}/Aligned.sortedByCoord.out.bam.bai", sample = config["samples"]["R636Q"])
 
-# Extract regions of mutation for R636Q
-rule all_extract_mutation_region_R636Q:
-  input:
-    expand("results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam", sample = config["samples"]["R636Q"]),
-    expand("results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["R636Q"])
 # Extract regions of mutation for P635L
-rule all_extract_mutation_region_P635L:
+rule all_extract_mutation_region:
   input:
     expand("results/STAR/IGV_mutation_check/P635L_{sample}_rbm20_mutation.bam", sample = config["samples"]["P635L"]),
-    expand("results/STAR/IGV_mutation_check/P635L_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["P635L"])
+    expand("results/STAR/IGV_mutation_check/P635L_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["P635L"]),
+    expand("results/STAR/IGV_mutation_check/P635L_after_base_editing_{sample}_rbm20_mutation.bam", sample = config["samples"]["P635L_after_base_editing"]),
+    expand("results/STAR/IGV_mutation_check/P635L_after_base_editing_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["P635L_after_base_editing"]),
+    expand("results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam", sample = config["samples"]["R636Q"]),
+    expand("results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["R636Q"]),
+    expand("results/STAR/IGV_mutation_check/R636Q_after_base_editing_{sample}_rbm20_mutation.bam", sample = config["samples"]["R636Q_after_base_editing"]),
+    expand("results/STAR/IGV_mutation_check/R636Q_after_base_editing_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["R636Q_after_base_editing"])
+
 
 # ALL rule: Create count matrices for DESeq analysis with start alignment
 rule all_count_matrices:
@@ -290,37 +292,40 @@ rule create_bam_idx:
   shell:
     "samtools index {input}"
     
-# Extract regions of mutation for R636Q
-rule extract_mutation_region_R636Q:
+# # Extract regions of mutation for R636Q
+# rule extract_mutation_region_R636Q:
+#   input:
+#      "results/STAR/R636Q/{sample}/Aligned.sortedByCoord.out.bam"
+#   conda:
+#     "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
+#   output:
+#     "results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam",
+#     "results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam.bai"
+#   shell:
+#     """
+#     samtools view -b {input} "chr19:53831594-53831754" > {output}
+#     samtools index {output}
+#     """
+#     # samtools view -b Aligned.sortedByCoord.out.bam "chr19:53831594-53831754"
+
+# Extract regions of mutations  
+rule extract_mutation_region:
   input:
-     "results/STAR/R636Q/{sample}/Aligned.sortedByCoord.out.bam"
+     "results/STAR/{experiment}/{sample}/Aligned.sortedByCoord.out.bam",
+     "results/STAR/{experiment}/{sample}/Aligned.sortedByCoord.out.bam.bai"
   conda:
     "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
   output:
-    "results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam",
-    "results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam.bai"
+    "results/STAR/IGV_mutation_check/{experiment}_{sample}_rbm20_mutation.bam",
+    "results/STAR/IGV_mutation_check/{experiment}_{sample}_rbm20_mutation.bam.bai"
+  params:
+    region = lambda wildcards: config["mutation_regions"][wildcards.experiment]
   shell:
     """
-    samtools view -b {input} "chr19:53831594-53831754" > {output}
+    samtools view -b {input} {params.region} > {output}
     samtools index {output}
     """
-    # samtools view -b Aligned.sortedByCoord.out.bam "chr19:53831594-53831754"
-
-# Extract regions of mutation for P635L
-rule extract_mutation_region_P635L:
-  input:
-     "results/STAR/P635L/{sample}/Aligned.sortedByCoord.out.bam"
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-  output:
-    "results/STAR/IGV_mutation_check/P635L_{sample}_rbm20_mutation.bam",
-    "results/STAR/IGV_mutation_check/P635L_{sample}_rbm20_mutation.bam.bai"
-  shell:
-    """
-    samtools view -b {input} "chr19:53831591-53831751" > {output}
-    samtools index {output}
-    """
-
+    
 # Create count matrices for DESeq analysis with start alignment
 rule count_matrices:
   input:
