@@ -1,8 +1,8 @@
 mutant 	 run	genotype	results_dir	treatment
 R636Q_after_base_editing	22s002893	hom	/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results	Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6
-R636Q_after_base_editing	22s002895	hom	/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results	Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6
+R636Q_after_base_editing	22s002895	hom	/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results	PBS
 R636Q_after_base_editing	22s002898	hom	/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results	Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6
-R636Q_after_base_editing	22s002894	hom	/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results	PBS
+R636Q_after_base_editing	22s002894	hom	/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results	Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6
 R636Q_after_base_editing	22s002896	hom	/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results	PBS
 R636Q_after_base_editing	22s002897	hom	/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results	PBS
 R636Q_after_base_editing	22s002899	wt	/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/results	none
