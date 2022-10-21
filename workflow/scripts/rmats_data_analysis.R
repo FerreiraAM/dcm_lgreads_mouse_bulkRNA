@@ -40,7 +40,10 @@ fun_basic_stats <- function(df_files, fdr = 0.01){
        "nb_genes_sig" = nb_genes_sig)
 }
 
-##### Initial experiment #####
+#### Load data ####
+# Using the JC files that contains the junction counts
+
+#### Initial experiment ####
 
 # R636Q HOM vs WT
 # List files
@@ -141,7 +144,7 @@ write.table(df_P635L_HETvsWT_wo3511_JC_files,
 # Stats
 fun_basic_stats(df_P635L_HETvsWT_wo3511_JC_files)
 
-# Base editing experiments 
+#### Base editing experiments ####
 
 # P635L Nterm_NRTH_Abe8e_and_Cterm_gRNA5 vs WT
 # P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT
@@ -307,9 +310,41 @@ write.table(df_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_
 fun_basic_stats(df_P635L_after_base_editing_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsNterm_SpRY_and_Cterm_SpRY_gRNA5_files)
 
 ###### Overlap ########
-# Run in the script rmats_data_analysis_cluster.R
-ls_sameevent_pergene <- readRDS(file = "rmats_directory/ls_sameevent_pergene.rds")
-df_sameevent_pergene <- bind_rows(ls_sameevent_pergene)
+# Previously --> replace by tidyverse command below
+# # Run in the script rmats_data_analysis_cluster.R
+# ls_sameevent_pergene <- readRDS(file = "rmats_directory/ls_sameevent_pergene.rds")
+# df_sameevent_pergene <- bind_rows(ls_sameevent_pergene)
+# df_sameevent_pergene_sig <- df_sameevent_pergene %>% 
+#   group_by(geneSymbol, SJ_name, SJ_ID) %>% 
+#   dplyr::filter((all(FDR[comparison == "HOMvsWT"] < 0.01) | all(FDR[comparison == "HOMvsWT"] == 0)) &
+#                   (all(IncLevelDifference[comparison == "HOMvsWT"] < -0.1) | 
+#                      all(IncLevelDifference[comparison == "HOMvsWT"] > 0.1)))
+# HOM vs WT
+# Add a column in each dataframe
+df_P635L_HOMvsWT_JC_files$mutant <- "P635L"
+df_P635L_HOMvsWT_JC_files$comparison <- "HOMvsWT"
+df_R636Q_HOMvsWT_JC_files$mutant <- "R636Q"
+df_R636Q_HOMvsWT_JC_files$comparison <- "HOMvsWT"
+df_P635L_HETvsWT_JC_files$mutant <- "P635L"
+df_P635L_HETvsWT_JC_files$comparison <- "HETvsWT"
+df_R636Q_HETvsWT_JC_files$mutant <- "R636Q"
+df_R636Q_HETvsWT_JC_files$comparison <- "HETvsWT"
+# Combine
+df_all_JC_files <- rbind(df_P635L_HOMvsWT_JC_files,
+                         df_R636Q_HOMvsWT_JC_files,
+                         df_P635L_HETvsWT_JC_files,
+                         df_R636Q_HETvsWT_JC_files)
+# Add SJ ID
+df_all_JC_files <- df_all_JC_files %>% 
+  group_by(geneSymbol, SJ_name, longExonStart_0base, longExonEnd,
+           shortES, shortEE, flankingES, flankingEE,
+           X1stExonStart_0base, X1stExonEnd, X2ndExonStart_0base, X2ndExonEnd, upstreamES, upstreamEE, downstreamES, downstreamEE,
+           riExonEnd, exonStart_0base, exonEnd) %>% 
+  mutate(SJ_ID = cur_group_id())
+# Filter for SJ events found more in all 4 
+df_all_JC_files_SJinall4 <- df_all_JC_files %>% 
+  group_by(SJ_ID) %>% 
+  dplyr::filter(n() == 4)
 # Filter the significant genes based on HOM vs WT comparison
 # Event with FDR < 0.01 or = 0 
 # FDR and p-value = 0 
@@ -317,8 +352,8 @@ df_sameevent_pergene <- bind_rows(ls_sameevent_pergene)
 # Zero P-value and FDR are generated when the actual value is smaller than the numerical accuracy cutoff, 
 # which is usually 2.2e-16. Therefore, zero P-values can be interpreted as P<= 2.2e-16.
 # And IncLevelDifference < -0.1 or > 0.1 
-df_sameevent_pergene_sig <- df_sameevent_pergene %>% 
-  group_by(geneSymbol, SJ_name, SJ_ID) %>% 
+df_sameevent_pergene_sig <- df_all_JC_files_SJinall4 %>% 
+  group_by(SJ_ID) %>% 
   dplyr::filter((all(FDR[comparison == "HOMvsWT"] < 0.01) | all(FDR[comparison == "HOMvsWT"] == 0)) &
                   (all(IncLevelDifference[comparison == "HOMvsWT"] < -0.1) | 
                      all(IncLevelDifference[comparison == "HOMvsWT"] > 0.1)))
@@ -357,11 +392,6 @@ pheatmap(mat_sameevent_pergene_sig_filtered_w,
 dev.off()
 
 # P635L HET, P635L HOM, R636Q HET, R636Q HOM
-# rename(mat_sameevent_pergene_sig_filtered_w, 
-#        "P635L HOM" = P635L_HOMvsWT,
-#        "R636Q HOM" = R636Q_HOMvsWT,
-#        "P635L HET" = P635L_HETvsWT,
-#        "R636Q HET" = R636Q_HETvsWT)
 pdf("rmats_directory/DRAFT_heatmap_rmats_allSJs_common_siginHOMvsWT.pdf", width = 11, height = 3)
 pheatmap(t(mat_sameevent_pergene_sig_filtered_w[,c("P635L_HETvsWT",
                                                    "P635L_HOMvsWT",
@@ -375,32 +405,12 @@ pheatmap(t(mat_sameevent_pergene_sig_filtered_w[,c("P635L_HETvsWT",
 dev.off()
 
 # Add SJ not overlaping but important genes
-# Cryab
-# Hdnr
-# Hectd2os
-# Mia2
-# Ryr2
-# Slmap
-# Usp48
-# Add a column in each dataframe
-df_P635L_HOMvsWT_JC_files$mutant <- "P635L"
-df_P635L_HOMvsWT_JC_files$comparison <- "HOMvsWT"
-df_R636Q_HOMvsWT_JC_files$mutant <- "R636Q"
-df_R636Q_HOMvsWT_JC_files$comparison <- "HOMvsWT"
-df_P635L_HETvsWT_JC_files$mutant <- "P635L"
-df_P635L_HETvsWT_JC_files$comparison <- "HETvsWT"
-df_R636Q_HETvsWT_JC_files$mutant <- "R636Q"
-df_R636Q_HETvsWT_JC_files$comparison <- "HETvsWT"
+# Cryab - Hdnr - Hectd2os - Mia2 - Ryr2 - Slmap - Usp48
 # Intersect all
 intersect_all_genesymbol <- Reduce(intersect, list(unique(df_P635L_HOMvsWT_JC_files$geneSymbol),
                                                    unique(df_R636Q_HOMvsWT_JC_files$geneSymbol),
                                                    unique(df_P635L_HETvsWT_JC_files$geneSymbol),
                                                    unique(df_R636Q_HETvsWT_JC_files$geneSymbol)))
-# Combine
-df_all_JC_files <- rbind(df_P635L_HOMvsWT_JC_files,
-                         df_R636Q_HOMvsWT_JC_files,
-                         df_P635L_HETvsWT_JC_files,
-                         df_R636Q_HETvsWT_JC_files)
 # Filtering
 # Common gene symbols
 df_all_JC_files_common_genesymbols <- dplyr::filter(df_all_JC_files, 
@@ -461,12 +471,11 @@ pheatmap(comb_SJevent_withmissgenes_sig_filtered_w[,c("P635L_HETvsWT",
          na_col = "gray58")
 dev.off()
 
+#### After base editing samples ####
 
-
+#### R636Q ####
 # identifying the significant SJ events between PBS vs WT for R636Q 
-# and looking into them in the other treatment 
-# --> try some plotting options
-# Merge PBSvsWT comparison with Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT
+# PBSvsWT - Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT
 # Add a column in each dataframe
 df_R636Q_after_base_editing_PBSvsWT_files$mutant <- "R636Q_after_base_editing"
 df_R636Q_after_base_editing_PBSvsWT_files$comparison <- "PBSvsWT"
@@ -506,32 +515,6 @@ df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore
 write.table(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd,
             file = "rmats_directory/table_df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd.txt",
             row.names = FALSE)
-# # Plot
-# pdf("rmats_directory/DRAFT_R636Q_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6.pdf", width = 10, height = 6)
-# ggplot(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig,
-#        aes(x = comparison, y = IncLevelDifference, color = geneSymbol, group = SJ_ID)) +
-#   geom_point() +
-#   geom_line() + 
-#   theme_bw()
-# dev.off()
-# # dplyr::filter(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig, geneSymbol == "Abcf1") %>% 
-# #   dplyr::select(FDR, IncLevelDifference, comparison)
-# 
-# # Add a column to color only Ttn
-# df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_ttn <- df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig %>% 
-#   mutate("Ttn" = geneSymbol == "Ttn")
-# pdf("rmats_directory/DRAFT_R636Q_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6.pdf", 
-#     width = 6, height = 6)
-# ggplot(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_ttn,
-#        aes(x = comparison, y = IncLevelDifference, group = SJ_ID)) +
-#   geom_point(aes(color=Ttn)) +
-#   geom_line(aes(color=Ttn)) +
-#   theme_bw() +
-#   scale_color_manual(values = c("black", "red")) +
-#   ggtitle("R636Q")
-# dev.off()
-
-
 # SJ events classification
 df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd_delta <- 
   df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd %>% 
@@ -627,9 +610,8 @@ ggplot(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6
                                                    size = 2))) 
 dev.off()
 
-# identifying the significant SJ events between PBS vs WT for P635L and looking into them in the other treatment 
-# --> try some plotting options
-# Merge PBSvsWT comparison with Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT
+#### P635L ####
+# PBSvsWT - Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT
 # Add a column in each dataframe
 df_P635L_after_base_editing_PBSvsWT_files$mutant <- "P635L_after_base_editing"
 df_P635L_after_base_editing_PBSvsWT_files$comparison <- "PBSvsWT"
@@ -669,32 +651,6 @@ df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig
 write.table(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd,
             file = "rmats_directory/table_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd.txt",
             row.names = FALSE)
-
-# # Plot
-# pdf("rmats_directory/DRAFT_P635L_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5.pdf", width = 10, height = 6)
-# ggplot(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig,
-#        aes(x = comparison, y = IncLevelDifference, group = SJ_ID)) +
-#   geom_point() +
-#   geom_line() + 
-#   theme_bw()
-# dev.off()
-# # dplyr::filter(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig, geneSymbol == "Abcf1") %>% 
-# #   dplyr::select(FDR, IncLevelDifference, comparison)
-# 
-# # Add a column to color only Ttn
-# df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_ttn <- df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig %>% 
-#   mutate("Ttn" = geneSymbol == "Ttn")
-# pdf("rmats_directory/DRAFT_P635L_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5.pdf", 
-#     width = 6, height = 6)
-# ggplot(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_ttn,
-#        aes(x = comparison, y = IncLevelDifference, group = SJ_ID)) +
-#   geom_point(aes(color=Ttn)) +
-#   geom_line(aes(color=Ttn)) +
-#   theme_bw() +
-#   scale_color_manual(values = c("black", "red")) + 
-#   ggtitle("P635L")
-# dev.off()
-
 # SJ events classification
 df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd_delta <- 
   df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig_wd %>% 
@@ -770,6 +726,7 @@ ggplot(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_
                                                    size = 2))) 
 dev.off()
 
+# PBSvsWT - Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT
 # Add column
 df_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_files$mutant <- "P635L_after_base_editing"
 df_P635L_after_base_editing_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_files$comparison <- "Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT"
@@ -807,22 +764,6 @@ df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_
 write.table(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd,
             file = "rmats_directory/table_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd.txt",
             row.names = FALSE)
-
-# # Plot
-# # Add a column to color only Ttn
-# df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_ttn <- df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig %>% 
-#   mutate("Ttn" = geneSymbol == "Ttn")
-# pdf("rmats_directory/DRAFT_P635L_after_base_editing_dotlineplot_allSJs_common_sigin_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5.pdf", 
-#     width = 6, height = 6)
-# ggplot(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_ttn,
-#        aes(x = comparison, y = IncLevelDifference, group = SJ_ID)) +
-#   geom_point(aes(color=Ttn)) +
-#   geom_line(aes(color=Ttn)) +
-#   theme_bw() +
-#   scale_color_manual(values = c("black", "red")) + 
-#   ggtitle("P635L")
-# dev.off() 
-
 # SJ events classification
 df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd_delta <- 
   df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_wd %>% 
@@ -900,7 +841,7 @@ dev.off()
 
 
 
-# Number of events in each category
+#### Number of events in each category ####
 df_nbevents_per_class <- bind_rows(data.frame("mutant" = "P635L", 
                      "comparison" = "PBS - SpRy",
                      table(unique(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_SJmore1_sig_lg_delta_ttn[,c("SJ_ID", "SJ_type")])$SJ_type)),

@@ -9,6 +9,47 @@ library(ggfortify)
 library(pheatmap)
 library(rtracklayer)
 
+#### Function definition #### 
+
+# Heatmap function
+# mutation: character, mutation
+# dds: DESeqDataSet, DESeq2 object
+# res: data.frame, significant results from DESeq DE test
+# sample_tab: data.frame, table with genotype for each sample
+# annot: data.frame, one column contains the ensembl IDs (called gene) and the other the gene_name
+# filter_col: character, column to filter on
+# gen: vector, selected phenotype
+# top: numeric, top gene to display
+function_my_heatmap <- function(mutation, dds, res, sample_tab, annot, filter_col, gen, top){
+  # Order genes based on adjusted p-values
+  res_ordered <- res[order(res$padj),]
+  # Select genotype samples
+  df_table <- dplyr::filter(sample_tab, 
+                            get(filter_col) %in% gen) %>% 
+    dplyr::select(run, filter_col)
+  row.names(df_table) <- df_table$run
+  # Extract top genes
+  counts_allsamples <- counts(dds, normalized=TRUE)[res_ordered[1:top, "gene"],]
+  counts_allsamples <- rownames_to_column(as.data.frame(counts_allsamples), 
+                                          var = "gene")
+  # Select genotype samples
+  counts_sig <- dplyr::select(counts_allsamples, c(df_table$run, "gene"))
+  # Add gene name
+  counts_sig_wgname <- dplyr::left_join(counts_sig, annot)
+  counts_sig_wgname <- column_to_rownames(counts_sig_wgname, "gene_name")
+  # Plot
+  pheatmap(counts_sig_wgname[,1:length(df_table$run)], 
+           cluster_rows = TRUE, 
+           show_rownames = TRUE,
+           show_colnames = FALSE,
+           cluster_cols = TRUE,
+           annotation_col = df_table,
+           scale = "row",
+           main = mutation)
+}
+
+
+#### Annotation file ####
 # Read gtf file
 # gen_vM29_annot <- read.delim("resources/gencode.vM29.annotation.gtf", header=F, comment.char="#")
 gen_vM29_annot <- import("resources/gencode.vM29.annotation.gtf")
@@ -17,15 +58,14 @@ gen_vM29_annot_gene <- gen_vM29_annot[,c("gene_id", "gene_name")]
 gen_vM29_annot_gene_uniq <- unique(as.data.frame(gen_vM29_annot_gene)[,c("gene_id", "gene_name")])
 colnames(gen_vM29_annot_gene_uniq)[1] <- c("gene")
 
+#### Experiment 1 ####
 # Load count matrices
 load("results/robject_featurecounts_allsamples.rda")
 imported_featurecounts_P635L <- readRDS("results/robject_featurecounts_P635L.rds")
 imported_featurecounts_R636Q <- readRDS("results/robject_featurecounts_R636Q.rds")
-# featurecounts_allsamples
 # Sample table
 sample_table <- read.table("/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/config/samples_metadata.txt",
                            header = TRUE)
-# read.table(snakemake@input$meta, header = TRUE)
 # Simplify sample table
 sample_table$sample <- paste("results/STAR", 
                              sample_table$mutant, 
@@ -58,13 +98,11 @@ ggsave("results/plot_STARalignment_pca_all_mice_genes.pdf",
        plot = plot_pca_all_mice,
        width = 7, height = 5, units = "in")
 
-# DESeq2
-# DESeqDataSetFromMatrix
+### DESeq2 ###
 # P635L
 # Filter 
 sample_table_P635L <- dplyr::filter(sample_table, mutant == "P635L")
 # Extract counts
-# featurecounts_P635L <- featurecounts_allsamples$counts[,sample_table_P635L$sample]
 featurecounts_P635L <- imported_featurecounts_P635L$counts
 # Check order
 if(all(colnames(featurecounts_P635L) == sample_table_P635L$sample)){
@@ -107,7 +145,6 @@ write.table(x = res_P635L_hetvswt_sig_withgenename,
 # Filter 
 sample_table_R636Q <- dplyr::filter(sample_table, mutant == "R636Q")
 # Extract counts
-# featurecounts_R636Q <- featurecounts_allsamples$counts[,sample_table_R636Q$sample]
 featurecounts_R636Q <- imported_featurecounts_R636Q$counts
 # Check order
 if(all(colnames(featurecounts_R636Q) == sample_table_R636Q$sample)){
@@ -146,7 +183,7 @@ write.table(x = res_R636Q_hetvswt_sig_withgenename,
             row.names = FALSE,
             col.names = TRUE)
 
-# P635L vs R636Q wt
+# P635L vs R636Q wt -> it shows that there is a batch effect
 # Filter 
 sample_table_wt <- dplyr::filter(sample_table, genotype == "wt")
 # Extract counts
@@ -175,42 +212,9 @@ write.table(x = res_P635LvsR636Q_wt_sig,
             row.names = FALSE,
             col.names = TRUE)
 
-# Heatmap function
-# mutation: character, mutation
-# dds: DESeqDataSet, DESeq2 object
-# res: data.frame, significant results from DESeq DE test
-# sample_tab: data.frame, table with genotype for each sample
-# annot: data.frame, one column contains the ensembl IDs (called gene) and the other the gene_name
-# filter_col: character, column to filter on
-# gen: vector, selected phenotype
-# top: numeric, top gene to display
-function_my_heatmap <- function(mutation, dds, res, sample_tab, annot, filter_col, gen, top){
-  # Order genes based on adjusted p-values
-  res_ordered <- res[order(res$padj),]
-  # Select genotype samples
-  df_table <- dplyr::filter(sample_tab, 
-                            get(filter_col) %in% gen) %>% 
-    dplyr::select(run, filter_col)
-  row.names(df_table) <- df_table$run
-  # Extract top genes
-  counts_allsamples <- counts(dds, normalized=TRUE)[res_ordered[1:top, "gene"],]
-  counts_allsamples <- rownames_to_column(as.data.frame(counts_allsamples), 
-                                          var = "gene")
-  # Select genotype samples
-  counts_sig <- dplyr::select(counts_allsamples, c(df_table$run, "gene"))
-  # Add gene name
-  counts_sig_wgname <- dplyr::left_join(counts_sig, annot)
-  counts_sig_wgname <- column_to_rownames(counts_sig_wgname, "gene_name")
-  # Plot
-  pheatmap(counts_sig_wgname[,1:length(df_table$run)], 
-           cluster_rows = TRUE, 
-           show_rownames = TRUE,
-           show_colnames = FALSE,
-           cluster_cols = TRUE,
-           annotation_col = df_table,
-           scale = "row",
-           main = mutation)
-}
+### Heatmap ###
+# top 20 genes
+# R636Q hom vs wt
 pdf("results/heatmap_STARalignment_R636Q_homvswt_top20.pdf")
 function_my_heatmap(mutation = "R636Q",
                     dds = dds_R636Q,
@@ -221,6 +225,7 @@ function_my_heatmap(mutation = "R636Q",
                     filter_col = "genotype",
                     top = 20)
 dev.off()
+# R636Q het vs wt
 pdf("results/heatmap_STARalignment_R636Q_hetvswt_top20.pdf")
 function_my_heatmap(mutation = "R636Q",
                     dds = dds_R636Q,
@@ -231,6 +236,7 @@ function_my_heatmap(mutation = "R636Q",
                     filter_col = "genotype",
                     top = 20)
 dev.off()
+# P635L hom vs wt
 pdf("results/heatmap_STARalignment_P635L_homvswt_top20.pdf")
 function_my_heatmap(mutation = "P635L",
                     dds = dds_P635L,
@@ -241,6 +247,7 @@ function_my_heatmap(mutation = "P635L",
                     filter_col = "genotype",
                     top = 20)
 dev.off()
+# P635L het vs wt
 pdf("results/heatmap_STARalignment_P635L_hetvswt_top20.pdf")
 function_my_heatmap(mutation = "P635L",
                     dds = dds_P635L,
@@ -251,6 +258,7 @@ function_my_heatmap(mutation = "P635L",
                     filter_col = "genotype",
                     top = 20)
 dev.off()
+# WT P635L vs R636Q
 pdf("results/heatmap_STARalignment_P635LvsR636Q_wt_top20.pdf")
 function_my_heatmap(mutation = "WT",
                     dds = dds_wt,
@@ -262,8 +270,10 @@ function_my_heatmap(mutation = "WT",
                     top = 20)
 dev.off()
 
+### Log2 FC ###
 # Compute fold change per individuals for each mutation
 # log2(hom/wt)
+
 # P635L
 dim(counts(dds_P635L, normalized = TRUE))
 geneexp_dds_P635L <- t(counts(dds_P635L, normalized = TRUE))
@@ -612,28 +622,10 @@ pheatmap(t(heatmap_data_P635LR636Q_hom_het_p_inf_1e10_w),
          annotation_col = annot_P635LR636Q)
 dev.off()
 
-# Dotplot
+### Dotplot ### --> not use
 genes_of_interest <- 
   c("Nppa", "Casq1", "Tnni2", "Mybpc2", "Tnnt3", 
     "Strit1", "Myh7b", "Hopx", "Aqp4", "Nppb")
-# 
-# heatmap_data_P635L_gene_int <- 
-#   dplyr::filter(heatmap_data_P635L_hom_het_p_inf_1e6,
-#               gene_name %in% genes_of_interest)
-# heatmap_data_R636Q_gene_int <- 
-#   dplyr::filter(heatmap_data_R636Q_hom_het_p_inf_1e6,
-#                 gene_name %in% genes_of_interest)
-# 
-# ggplot(rbind(heatmap_data_P635L_gene_int, heatmap_data_R636Q_gene_int), 
-#        aes(x = gene_name, y = run)) +
-#   geom_point(aes(size = log1p(value), fill = log2_FC), pch = 21) +
-#   # Size with outline
-#   # blue to red
-#   # geom_point(aes(size = log2_FC, colour = log1p(value))) +
-#   scale_fill_gradient2(midpoint = 0, low = "blue", mid = "white",
-#                          high = "red", space ="Lab" ) +
-#   theme_bw()
-# 
 
 df_res_P635L_homvswt <- rownames_to_column(as.data.frame(res_P635L_homvswt), "gene")
 full_res_P635L_homvswt_log2FC <- inner_join(df_res_P635L_homvswt, 
@@ -644,7 +636,7 @@ full_res_R636Q_homvswt_log2FC <- inner_join(df_res_R636Q_homvswt,
 # Combine
 full_res_P635LR636Q_homvswt_log2FC <- 
   rbind(full_res_P635L_homvswt_log2FC, full_res_R636Q_homvswt_log2FC)
-# Add significan column
+# Add significant column
 full_res_P635LR636Q_homvswt_log2FC_sig <-
   full_res_P635LR636Q_homvswt_log2FC %>% 
   mutate(significant = padj < 1e-6)
@@ -690,13 +682,11 @@ ggplot(full_res_P635LR636Q_homvswt_log2FC_sig,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
 dev.off()
 
-########### After editing ############
+#### Experiment 2 - After editing ####
 
-# Sample table
 # Sample table
 sample_table_after_base_editing <- read.table("/g/steinmetz/project/dcm_lgreads/mouse_bulkRNA/config/samples_afterbaseediting_metadata.txt",
                            header = TRUE)
-# read.table(snakemake@input$meta, header = TRUE)
 # Simplify sample table
 sample_table_after_base_editing$sample <- paste("results/STAR", 
                              sample_table_after_base_editing$mutant, 
@@ -751,8 +741,7 @@ ggsave("results/plot_STARalignment_pca_after_base_editing.pdf",
        plot = plot_pca_after_base_editing,
        width = 7, height = 5, units = "in")
 
-# DESeq2
-# DESeqDataSetFromMatrix
+### DESeq2 ###
 # P635L
 # Filter
 sample_table_P635L_after_base_editing <- dplyr::filter(sample_table_after_base_editing, 
@@ -942,7 +931,7 @@ write.table(x = res_R636Q_after_base_editing_PBSvsnone_sig_wgenename,
             row.names = FALSE,
             col.names = TRUE)
 
-# Heatmaps
+### Heatmaps top 20 genes ###
 # P635L
 pdf("results/heatmap_STARalignment_P635L_after_base_editing_SpRYvsNRTH_top20.pdf")
 function_my_heatmap(mutation = "P635L",

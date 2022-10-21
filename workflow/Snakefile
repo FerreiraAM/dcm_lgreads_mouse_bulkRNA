@@ -1,24 +1,13 @@
 # Config file
-configfile: "config/config.yml"
+configfile: "config/config.yml" # print(config["samples"]["P635L"])
 
-# print(config["samples"]["P635L"])
+# Include
+include: "rules/STAR_alignment.smk"
+include: "rules/DESeq_analysis.smk"
+include: "rules/DEXSeq_analysis.smk"
+# include: "rMATS_analysis.smk"
 
-import glob
-
-# infer input fastq files from dirs in config file and sample wildcard
-def get_fastq_files(wildcards):
-	indir = config["samples"][wildcards.mutation][wildcards.sample]
-	file1 = glob.glob(indir + "/*" + wildcards.sample  + "_1_sequence.txt.gz")
-	file2 = glob.glob(indir + "/*" + wildcards.sample  + "_2_sequence.txt.gz")
-	return {"fastq1" : file1, "fastq2" : file2}
-
-# ALL rules
-# For kallisto alignment
-rule all_aligment:
-  input:
-    expand("results/P635L/{sample}/abundance.tsv", sample = config["samples"]["P635L"]),
-    expand("results/R636Q/{sample}/abundance.tsv", sample = config["samples"]["R636Q"])
-
+### ALL rules ###
 # For STAR mapping
 rule all_STAR_mapping:
   input:
@@ -27,6 +16,31 @@ rule all_STAR_mapping:
     expand("results/STAR/P635L_after_base_editing/{sample}/Aligned.sortedByCoord.out.bam", sample = config["samples"]["P635L_after_base_editing"]),
     expand("results/STAR/R636Q_after_base_editing/{sample}/Aligned.sortedByCoord.out.bam", sample = config["samples"]["R636Q_after_base_editing"])
     
+# Create index for bam files
+rule all_create_bam_idx:
+  input: 
+    expand("results/STAR/P635L/{sample}/Aligned.sortedByCoord.out.bam.bai", sample = config["samples"]["P635L"]),
+    expand("results/STAR/R636Q/{sample}/Aligned.sortedByCoord.out.bam.bai", sample = config["samples"]["R636Q"])
+
+# Extract regions of mutation for P635L
+rule all_extract_mutation_region:
+  input:
+    expand("results/STAR/IGV_mutation_check/P635L_{sample}_rbm20_mutation.bam", sample = config["samples"]["P635L"]),
+    expand("results/STAR/IGV_mutation_check/P635L_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["P635L"]),
+    expand("results/STAR/IGV_mutation_check/P635L_after_base_editing_{sample}_rbm20_mutation.bam", sample = config["samples"]["P635L_after_base_editing"]),
+    expand("results/STAR/IGV_mutation_check/P635L_after_base_editing_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["P635L_after_base_editing"]),
+    expand("results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam", sample = config["samples"]["R636Q"]),
+    expand("results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["R636Q"]),
+    expand("results/STAR/IGV_mutation_check/R636Q_after_base_editing_{sample}_rbm20_mutation.bam", sample = config["samples"]["R636Q_after_base_editing"]),
+    expand("results/STAR/IGV_mutation_check/R636Q_after_base_editing_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["R636Q_after_base_editing"])
+
+# Create count matrices for DESeq analysis with STAR alignment
+rule all_count_matrices:
+  input:
+    expand("results/robject_featurecounts_{experiment}.rds", experiment = config["samples"])
+    
+### Appendix aLL rules ###
+# DEXseq
 # For DEXSeq count reads
 rule all_DEXSeq_count_reads:
   input:
@@ -48,338 +62,4 @@ rule all_DEXSeq_dispersion:
 rule all_DEXSeq_DEUtest:
   input:
     expand("results/DEXSeq/robject_{mutation}_dexseq_DEUres_WTvsHOM.rda", mutation = config["mutation"])
-
-# Create index for bam files
-rule all_create_bam_idx:
-  input: 
-    expand("results/STAR/P635L/{sample}/Aligned.sortedByCoord.out.bam.bai", sample = config["samples"]["P635L"]),
-    expand("results/STAR/R636Q/{sample}/Aligned.sortedByCoord.out.bam.bai", sample = config["samples"]["R636Q"])
-
-# Extract regions of mutation for P635L
-rule all_extract_mutation_region:
-  input:
-    expand("results/STAR/IGV_mutation_check/P635L_{sample}_rbm20_mutation.bam", sample = config["samples"]["P635L"]),
-    expand("results/STAR/IGV_mutation_check/P635L_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["P635L"]),
-    expand("results/STAR/IGV_mutation_check/P635L_after_base_editing_{sample}_rbm20_mutation.bam", sample = config["samples"]["P635L_after_base_editing"]),
-    expand("results/STAR/IGV_mutation_check/P635L_after_base_editing_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["P635L_after_base_editing"]),
-    expand("results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam", sample = config["samples"]["R636Q"]),
-    expand("results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["R636Q"]),
-    expand("results/STAR/IGV_mutation_check/R636Q_after_base_editing_{sample}_rbm20_mutation.bam", sample = config["samples"]["R636Q_after_base_editing"]),
-    expand("results/STAR/IGV_mutation_check/R636Q_after_base_editing_{sample}_rbm20_mutation.bam.bai", sample = config["samples"]["R636Q_after_base_editing"])
-
-
-# ALL rule: Create count matrices for DESeq analysis with start alignment
-rule all_count_matrices:
-  input:
-    expand("results/robject_featurecounts_{experiment}.rds", experiment = config["samples"])
-
-# Data analysis pipeline
-# Download index
-rule download_genome:
-	output: 
-		idx = "resources/tx_indices/Mus_musculus.GRCm38.cdna.all.release-94_k31.idx"
-	conda: 
-		"envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-	params:
-		url = "https://github.com/pachterlab/kallisto-transcriptome-indices/releases/download/94/Mus_musculus.GRCm38.cdna.all.release-94_k31.idx.gz"
-	shell:
-		"wget -O {output.idx}.gz {params.url}; gunzip {output.idx}.gz"
-
-# Run mapping
-rule run_kallisto:
-	input: 
-	  unpack(get_fastq_files),
-		index = "resources/tx_indices/Mus_musculus.GRCm38.cdna.all.release-94_k31.idx"
-	output:
-		"results/{mutation}/{sample}/abundance.tsv",
-		"results/{mutation}/{sample}/abundance.h5"
-	params:
-	  outdir = "results/{mutation}/{sample}"
-	conda: 
-		"envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-	shell:
-		"kallisto quant -i {input.index} -o {params.outdir} {input.fastq1} {input.fastq2}"
-    
-# DESeq
-rule deseq_analysis:
-  input:
-    meta = config["samples_metadata"],
-    P635L_files = expand("results/P635L/{sample}/abundance.tsv", sample = config["samples"]["P635L"]),
-    R636Q_files = expand("results/R636Q/{sample}/abundance.tsv", sample = config["samples"]["R636Q"])
-  output:
-    "results/total_nb_reads.csv",
-    "results/plot_pca_all_mice_genes.pdf",
-    "results/plot_pca_P635L_mice_genes.pdf",
-    "results/plot_pca_R636Q_mice_genes.pdf",
-    "results/table_res_P635L_homvswt_sig.txt",
-    "results/table_res_P635L_hetvswt_sig.txt",
-    "results/table_res_R636Q_homvswt_sig.txt",
-    "results/table_res_R636Q_hetvswt_sig.txt",
-    "results/heatmap_R636Q.pdf",
-    "results/heatmap_P635L.pdf"
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_Ranalysis.yml"
-  script:
-    "scripts/DESeq_analysis.R"
-    
-# Run STAR aligment to use DEXSeq package
-# Download gencode annotation
-rule download_mouse_gencode_annotation:
-  output: 
-    annot = "resources/gencode.vM29.annotation.gtf"
-  conda: 
-    "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-  params:
-    url = "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M29/gencode.vM29.annotation.gtf.gz"
-  shell:
-    "wget -O {output.annot}.gz {params.url}; gunzip {output.annot}.gz"
-
-# Donwload gencode fasta file
-rule download_mouse_gencode_genome:
-  output:
-    genome = "resources/GRCm39.primary_assembly.genome.fa"
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-  params:
-    url = "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M29/GRCm39.primary_assembly.genome.fa.gz"
-  shell:
-    "wget -O {output.genome}.gz {params.url}; gunzip {output.genome}.gz"
-
-# Create STAR index
-rule STAR_index:
-  input:
-    genome = "resources/GRCm39.primary_assembly.genome.fa",
-    annot = "resources/gencode.vM29.annotation.gtf"
-  output:
-    dir = directory("resources/gencode_GRCm39/")
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-  resources:
-    mem_mb = "40G"
-  threads:
-    6
-  shell:
-    "STAR --runThreadN 6 --runMode genomeGenerate --genomeDir {output.dir} --genomeFastaFiles {input.genome} --sjdbGTFfile {input.annot} --sjdbOverhang 100"
-
-# Align reads with STAR
-rule STAR_mapping:
-  input:
-    unpack(get_fastq_files),
-    dir = "resources/gencode_GRCm39/"
-  params:
-    prefix = "results/STAR/{mutation}/{sample}/"
-  output:
-    "results/STAR/{mutation}/{sample}/Aligned.sortedByCoord.out.bam"
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-  resources:
-    mem_mb = "30G",
-    time = "2-00:00:00"
-  threads:
-    6
-  shell:
-    "STAR --genomeDir {input.dir} --runThreadN 6 --readFilesIn {input.fastq1} {input.fastq2} --outFileNamePrefix {params.prefix} --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within --outSAMattributes Standard  --readFilesCommand zcat"
-
-# STAR report info
-rule STAR_report_info:
-  input:
-    expand("results/STAR/P635L/{sample}/Log.final.out", sample = config["samples"]["P635L"]),
-    expand("results/STAR/R636Q/{sample}/Log.final.out", sample = config["samples"]["R636Q"]),
-    expand("results/STAR/P635L_after_base_editing/{sample}/Log.final.out", sample = config["samples"]["P635L_after_base_editing"]),
-    expand("results/STAR/R636Q_after_base_editing/{sample}/Log.final.out", sample = config["samples"]["R636Q_after_base_editing"])
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-  output:
-    "results/table_STARalignment_total_number_reads.txt"
-  script:
-    "scripts/align_report.R"
-
-# Run DEXSeq
-# Prepare the annotation
-rule DEXSeq_annotation_preparation:
-  input:
-    gtf_file = "resources/gencode.vM29.annotation.gtf"
-  output:
-    "results/gencode_GRCm39/gencode.vM29.annotation.DEXSeq.chr.gff"
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_Ranalysis.yml"
-  shell:
-    "python /g/steinmetz/ferreira/R-lib/4.1.2-foss-2021b/DEXSeq/python_scripts/dexseq_prepare_annotation.py {input.gtf_file} {output}"
-    
-# Sort bam files
-rule sort_STAR_bam_files:
-  input:
-    alignment_file = "results/STAR/{mutation}/{sample}/Aligned.sortedByCoord.out.bam"
-  output:
-    "results/STAR/{mutation}/{sample}/Aligned.sortedByCoord.out_sorted.bam"
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-  shell:
-    "samtools sort -n {input.alignment_file} -o {output}"
-    
-# Count reads
-rule DEXSeq_count_reads:
-  input:
-    gff_file = "results/gencode_GRCm39/gencode.vM29.annotation.DEXSeq.chr.gff",
-    alignment_file = "results/STAR/{mutation}/{sample}/Aligned.sortedByCoord.out_sorted.bam"
-  output:
-    "results/STAR/{mutation}/{sample}/read_counts_sorted_reverse.txt"
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_Ranalysis.yml"
-  resources:
-    time = "2-00:00:00"
-  shell:
-    "python /g/steinmetz/ferreira/R-lib/4.1.2-foss-2021b/DEXSeq/python_scripts/dexseq_count.py -p yes -f bam -s reverse {input.gff_file} {input.alignment_file} {output}"
-
-# Clean reads_counts.txt files
-# https://support.bioconductor.org/p/9143537/
-rule clean_reads_counts:
-  input:
-    "results/STAR/{mutation}/{sample}/read_counts_sorted_reverse.txt"
-  output:
-    "results/STAR/{mutation}/{sample}/read_counts_sorted_reverse_clean.txt"
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-  resources:
-    time = "2-00:00:00"
-  shell:
-    "sed 's/\"//g' {input} > {output}"
-    
-# DEXSeq estimate dispersion
-rule DEXSeq_dispersion:
-  input:
-    meta = config["samples_metadata"],
-    P635L_files = expand("results/STAR/P635L/{sample}/read_counts_sorted_reverse_clean.txt", sample = config["samples"]["P635L"]),
-    R636Q_files = expand("results/STAR/R636Q/{sample}/read_counts_sorted_reverse_clean.txt", sample = config["samples"]["R636Q"])
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_Ranalysis.yml"
-  output:
-    "results/DEXSeq/robject_{mutation}_dexseq_estdisp_3conditions.rda",
-    "results/DEXSeq/plot_{mutation}_dxd_dispersion_estimate_3conditions.png",
-    "results/DEXSeq/robject_{mutation}_dexseq_estdisp_WTvsHOM.rda",
-    "results/DEXSeq/plot_{mutation}_dxd_dispersion_estimate_WTvsHOM.png"
-  resources:
-    mem_mb = "40G",
-    time = "2-00:00:00"
-  threads:
-    6
-  script:
-    "scripts/DEXSeq_analysis_dispersion.R"
-    
-# DEXSeq DEU test
-rule DEXSeq_DEUtest:
-  input:
-    meta = config["samples_metadata"],
-    files = expand("results/DEXSeq/robject_{mutation}_dexseq_estdisp_WTvsHOM.rda", mutation = config["mutation"])
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_Ranalysis.yml"
-  output:
-    "results/DEXSeq/robject_{mutation}_dexseq_DEUres_WTvsHOM.rda"
-  resources:
-    mem_mb = "10G",
-    time = "2-00:00:00"
-  script:
-    "scripts/DEXSeq_analysis_DEUtest.R"
-    
-# Create bam index
-rule create_bam_idx:
-  input:
-    "results/STAR/{mutation}/{sample}/Aligned.sortedByCoord.out.bam"
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-  output:
-    "results/STAR/{mutation}/{sample}/Aligned.sortedByCoord.out.bam.bai"
-  shell:
-    "samtools index {input}"
-    
-# # Extract regions of mutation for R636Q
-# rule extract_mutation_region_R636Q:
-#   input:
-#      "results/STAR/R636Q/{sample}/Aligned.sortedByCoord.out.bam"
-#   conda:
-#     "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-#   output:
-#     "results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam",
-#     "results/STAR/IGV_mutation_check/R636Q_{sample}_rbm20_mutation.bam.bai"
-#   shell:
-#     """
-#     samtools view -b {input} "chr19:53831594-53831754" > {output}
-#     samtools index {output}
-#     """
-#     # samtools view -b Aligned.sortedByCoord.out.bam "chr19:53831594-53831754"
-
-# Extract regions of mutations  
-rule extract_mutation_region:
-  input:
-     "results/STAR/{experiment}/{sample}/Aligned.sortedByCoord.out.bam",
-     "results/STAR/{experiment}/{sample}/Aligned.sortedByCoord.out.bam.bai"
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_MAPPING.yml"
-  output:
-    "results/STAR/IGV_mutation_check/{experiment}_{sample}_rbm20_mutation.bam",
-    "results/STAR/IGV_mutation_check/{experiment}_{sample}_rbm20_mutation.bam.bai"
-  params:
-    region = lambda wildcards: config["mutation_regions"][wildcards.experiment]
-  shell:
-    """
-    samtools view -b {input} {params.region} > {output}
-    samtools index {output}
-    """
-    
-# Create count matrices for DESeq analysis with start alignment
-rule count_matrices:
-  input:
-    lambda wildcards: expand("results/STAR/{{experiment}}/{sample}/Aligned.sortedByCoord.out.bam", sample = config["samples"][wildcards.experiment])
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_Ranalysis.yml"
-  params:
-    strandness = lambda wildcards: config["strand"][wildcards.experiment]
-  output:
-    "results/robject_featurecounts_{experiment}.rds"
-  resources:
-    mem_mb = "10G",
-    time = "2-00:00:00"
-  threads:
-    6
-  script:
-    "scripts/DESeq_analysis_withSTARalignment_createcountmatrices.R"
-    
-# # rMATS
-# rule splicing_event_with_rMATS:
-#   input:
-#     gtf_file = "resources/gencode.vM29.annotation.gtf",
-#     wt_file = "results/rmats_directory/P635L_WT_files.txt",
-#     het_file = "results/rmats_directory/P635L_HET_files.txt"
-#   output:
-#     "A3SS.MATS.JC.txt",
-#     "A5SS.MATS.JC.txt",
-#     "MXE.MATS.JC.txt",
-#     "RI.MATS.JC.txt",
-#     "SE.MATS.JC.txt",
-#     dir = "results/rmats_directory/P635L_HETvsWT/"
-#   conda:
-#     "envs/process_dcm_mouse_bulkRNA_rMATS.yml"
-#   resources:
-#     mem_mb = "10G",
-#     time = "1-00:00:00"
-#   params:
-#     readLength = 160,
-#     typeread = "paired"
-#   threads:
-#     6
-#   shell:
-#     "python /g/steinmetz/ferreira/software/miniconda3/envs/rMATS_env/rMATS/rmats.py --b1 {input.het_file} --b2 {input.wt_file} --gtf {input.gtf_file} -t {params.typeread} --readLength {params.readLength} --nthread {threads} --od {output.dir}"
-# conda activate rMATS_env
-
-# rMATS data analysis - overlap of SJ
-rule rMATS_overlapSJ:
-  conda:
-    "envs/process_dcm_mouse_bulkRNA_Ranalysis.yml"
-  output:
-    "rmats_directory/ls_sameevent_pergene.rds"
-  resources:
-    mem_mb = "10G",
-    time = "2-00:00:00"
-  script:
-    "scripts/rmats_data_analysis_cluster.R"
     
