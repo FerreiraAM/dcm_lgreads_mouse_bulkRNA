@@ -22,7 +22,8 @@ config/samples_afterbaseediting_metadata.txt.
 ## Analysis
 
 The analysis was done using *Snakemake* [Mölder et al. 2021] 
-(except for the *rMATS* analysis [Shen et al. 2014]).
+(except for the *rMATS* analysis [Shen et al. 2014]) and followed the *Snakemake* 
+recommended directory structure.
 
 ### Alignment
 
@@ -82,6 +83,9 @@ analysis and plot all heatmaps.
 We used *rMATS* [Shen et al. 2014] to detect differential alternative splicing events. 
 Unfortunately, *rMATS* was not easily compatible at the time with snakemake. We then 
 created its own conda environment that can be activated using *conda activate rMATS_env*.
+
+All *rMATS* results are located outside the *results* directory, in its own directory:
+*rmats_directory/*.
 
 Scripts located at:
 
