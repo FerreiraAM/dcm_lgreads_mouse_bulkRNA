@@ -528,13 +528,13 @@ df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore
 #                            abs(diff) > 0.1 & (x_original) < 0 & (x_edited) <= 0 & (x_original) < (x_edited) ~ "rescue",
 #                            abs(diff) > 0.1 & (x_original) > 0 & (x_edited) >= 0 & (x_original) < (x_edited) ~ "reversal",
 #                            abs(diff) > 0.1 & (x_original) < 0 & (x_edited) <= 0 & (x_original) > (x_edited) ~ "reversal",
-#                            abs(diff) > 0.1 & (x_original) > 0 & (x_edited) <= 0 & (x_original) > (x_edited) &
+#                            abs(diff) > 0.1 & (x_original) > 0 & (x_original) > (x_edited) &
 #                              ((x_edited) >= -0.2 & (x_edited) <= 0.2) ~ "rescue",
-#                            abs(diff) > 0.1 & (x_original) > 0 & (x_edited) <= 0 & (x_original) > (x_edited) &
+#                            abs(diff) > 0.1 & (x_original) > 0 & (x_original) > (x_edited) &
 #                              ((x_edited) < -0.2 | (x_edited) > 0.2) ~ "reversal",
-#                            abs(diff) > 0.1 & (x_original) < 0 & (x_edited) >= 0 & (x_original) < (x_edited) &
+#                            abs(diff) > 0.1 & (x_original) < 0 & (x_original) < (x_edited) &
 #                              ((x_edited) >= -0.2 & (x_edited) <= 0.2) ~ "rescue",
-#                            abs(diff) > 0.1 & (x_original) < 0 & (x_edited) >= 0 & (x_original) < (x_edited) &
+#                            abs(diff) > 0.1 & (x_original) < 0 & (x_original) < (x_edited) &
 #                              ((x_edited) < -0.2 | ((x_edited)) > 0.2) ~ "reversal"))
 #   # Replace NA
 #   replace_na(df_class, list(SJ_type = "diff_inf_0.1"))
@@ -546,16 +546,16 @@ df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore
                              abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0 & PBSvsWT < Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 ~ "rescue",
                              abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= 0 & PBSvsWT < Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 ~ "reversal",
                              abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0 & PBSvsWT > Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 ~ "reversal",
-                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT > 0 & 
                                PBSvsWT > (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6) & 
                                (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= -0.2 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0.2) ~ "rescue",
-                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT > 0 & 
                                PBSvsWT > (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6) & 
                                (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 > 0.2) ~ "reversal",
-                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT < 0 & 
                                (PBSvsWT) < Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 & 
                                (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= -0.2 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0.2) ~ "rescue",
-                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT < 0 &  
                                (PBSvsWT) < Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 & 
                                (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 > 0.2) ~ "reversal"))
 # Replace NA 
@@ -662,16 +662,16 @@ df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_sig
                              abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0 & PBSvsWT < Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT ~ "rescue",
                              abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT >= 0 & PBSvsWT < Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT ~ "reversal",
                              abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0 & PBSvsWT > Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT ~ "reversal",
-                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT > 0 &  
                                PBSvsWT > (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT) & 
                                (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT >= -0.2 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0.2) ~ "rescue",
-                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT > 0 & 
                                PBSvsWT > (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT) & 
                                (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT > 0.2) ~ "reversal",
-                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT >= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT < 0 & 
                                (PBSvsWT) < Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT & 
                                (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT >= -0.2 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT <= 0.2) ~ "rescue",
-                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT >= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT < 0 & 
                                (PBSvsWT) < Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT & 
                                (Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT > 0.2) ~ "reversal"))
 # Replace NA 
@@ -775,16 +775,16 @@ df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_sig_
                              abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0 & PBSvsWT < Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT ~ "rescue",
                              abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT >= 0 & PBSvsWT < Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT ~ "reversal",
                              abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0 & PBSvsWT > Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT ~ "reversal",
-                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT > 0 & 
                                PBSvsWT > (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT) & 
                                (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT >= -0.2 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0.2) ~ "rescue",
-                             abs(diff) > 0.1 & PBSvsWT > 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT > 0 &  
                                PBSvsWT > (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT) & 
                                (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT < -0.2 | Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT > 0.2) ~ "reversal",
-                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT >= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT < 0 & 
                                (PBSvsWT) < Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT & 
                                (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT >= -0.2 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT <= 0.2) ~ "rescue",
-                             abs(diff) > 0.1 & PBSvsWT < 0 & Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT >= 0 & 
+                             abs(diff) > 0.1 & PBSvsWT < 0 &  
                                (PBSvsWT) < Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT & 
                                (Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT < -0.2 | Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT > 0.2) ~ "reversal"))
 # Replace NA 
