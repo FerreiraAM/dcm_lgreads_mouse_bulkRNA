@@ -6,7 +6,7 @@
 Illumina (bulk RNA-seq) from mouse hearts.
 
 Two main mutations are studied in the RBM20 gene: P635L located at chr19:53831671 
-(C wt \> T mut) and R636Q located at chr19:53831674/675 (GT wt \> AG mut).
+(C wt > T mut) and R636Q located at chr19:53831674/675 (GT wt > AG mut).
 
 ### Induce mutation - experiment 1
 
@@ -21,17 +21,18 @@ config/samples_afterbaseediting_metadata.txt.
 
 ## Analysis
 
-The analysis was done using *Snakemake* [Mölder et al. 2021] 
-(except for the *rMATS* analysis [Shen et al. 2014]) and followed the *Snakemake* 
-recommended directory structure.
+The analysis was done using *Snakemake* [Mölder et al. 2021] and followed the *Snakemake* 
+recommended directory structure (except for the *rMATS* analysis [Shen et al. 2014]).
 
 ### Alignment
 
 #### STAR
 
 The alignment of the different samples is performed using *STAR* [Dobin et al. 2013]. 
-We use the GENCODE mouse annotation version vM29 with the primary assembly GRCm39 genome. 
-We create the indexes and then align the reads for each sample using the default options.
+We use the GENCODE [Frankish et al. 2021] mouse annotation version vM29 with 
+the primary assembly GRCm39 genome. 
+We create the indexes and then align the reads for each sample using the default options
+of the *STAR* aligner.
 
 Script located at:
 
@@ -48,14 +49,16 @@ Script located at:
 
 ### DESeq2
 
-We use *DESeq2* [Love et al. 2019] to perform the differential expression analysis 
-for the samples of the first experiment.
+We use DESeq2 [Love et al. 2019] to perform the differential expression analysis 
+using the R programming language [R Core Team (2022)]. We perform each comparison 
+(listed below) for each mutation/conditions associated with each experiment using the count 
+matrices that were created from the BAM files thanks to the Rsubread R package 
+[Liao et al. 2019]. We created the DESeq2 object and use the main function (DESeq) 
+that performs a default analysis through the following steps described in 
+[Love et al. 2019]: (i) estimation of the size factors; (ii) estimation of the 
+dispersion; (iii) negative binomial Generalized Linear Model fitting and Wald statistics.
 
-The first step is to create count matrices from the *.bam* files using the R 
-package *Rsubread* [Liao et al. 2019]. The results are saved in rds object that 
-can be load in the R script to perform the analysis.
-
-We perform each comparison for each mutation/conditions:
+Comparison list:
 
 - P635L: HET vs WT; HOM vs WT;
 - R636Q: HET vs WT; HOM vs WT;
@@ -67,7 +70,8 @@ PBS vs none;
 Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 vs none; PBS vs none.
 
 We computed the log2 fold change (log2FC) per individual for each mutation, 
-using the average per gene from the WT samples: *log2FC for gene A = log2(value of gene A / WT average for gene A)*.
+using the average per gene from the WT samples of one experiment’s mutation: 
+*log2FC for gene A = log2(value of gene A / WT average for gene A)*.
 
 For visualization, we plotted different heatmaps with the top genes expression 
 as well as with the log2FC values.
@@ -80,9 +84,37 @@ analysis and plot all heatmaps.
 
 ### rMATS
 
-We used *rMATS* [Shen et al. 2014] to detect differential alternative splicing events. 
-Unfortunately, *rMATS* was not easily compatible at the time with snakemake. We then 
-created its own conda environment that can be activated using *conda activate rMATS_env*.
+We use *rMATS* [Shen et al. 2014] to detect differential alternative splicing events. 
+Unfortunately, *rMATS* was not easily compatible with snakemake at the time of the analysis. 
+We then created its own conda environment that can be activated using *conda activate rMATS_env*.
+
+Using the python script provided by the software, we performed the different 
+comparisons for the samples that were base edited. We used all the samples of 
+one condition for one mutation as replicated and specified that the sequences 
+were paired and the read length was 160 base pairs (information extracted from the 
+STAR reports). We imported the results in R and analyzed the results from the 
+Junctions Counts (JC) files. We identified splice junction events that were 
+overlapping between different conditions and filtered for significant events. 
+An event was considered significant if the False Discovery Rate (FDR) was inferior 
+to 0.01 and the Percentage Spliced in (PSI) value was either superior to 0.1 or 
+inferior to -0.1. We classified these significant events in three categories: 
+rescued, mis-placed or unchanged. We computed the average PSI difference between 
+untreated samples and the base-edited samples, and considered the absolute 
+difference. We classified the events as unchanged if 
+the absolute difference of PSI was inferior than 0.1. The remaining events were 
+either classified as rescued or mis-placed. In addition, we defined the PSI 
+values of untreated samples as the original value x_original, the PSI values 
+of base-edited samples as the edited value x_edited and used the following criteria:
+
+- Rescued:
+x_original > 0 and x_edited >= 0 or -0.2 <= x_edited <= 0.2 and x_original > x_edited;
+x_original < 0 and x_edited <= 0 or -0.2 <= x_edited <= 0.2 and x_original < x_edited
+
+- Mis-placed:
+x_original > 0 and x_edited >= 0 and x_original < x_edited;
+x_original < 0 and x_edited >= 0 or 0.2 <= x_edited >= 0.2 and x_original > x_edited;
+x_original > 0 and -0.2 < x_edited or x_edited > 0.2 and x_original > x_edited;
+x_original < 0 and -0.2 < x_edited or x_edited > 0.2 and x_original < x_edited
 
 All *rMATS* results are located outside the *results* directory, in its own directory:
 *rmats_directory/*.
