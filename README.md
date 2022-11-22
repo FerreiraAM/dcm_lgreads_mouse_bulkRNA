@@ -98,11 +98,11 @@ overlapping between different conditions and filtered for significant events.
 An event was considered significant if the False Discovery Rate (FDR) was inferior 
 to 0.01 and the Percentage Spliced in (PSI) value was either superior to 0.1 or 
 inferior to -0.1. We classified these significant events in three categories: 
-rescued, mis-placed or unchanged. We computed the average PSI difference between 
+rescued, mis-spliced or unchanged. We computed the average PSI difference between 
 untreated samples and the base-edited samples, and considered the absolute 
 difference. We classified the events as unchanged if 
 the absolute difference of PSI was inferior than 0.1. The remaining events were 
-either classified as rescued or mis-placed. In addition, we defined the PSI 
+either classified as rescued or mis-spliced. In addition, we defined the PSI 
 values of untreated samples as the original value x_original, the PSI values 
 of base-edited samples as the edited value x_edited and used the following criteria:
 
@@ -110,11 +110,11 @@ of base-edited samples as the edited value x_edited and used the following crite
 x_original > 0 and x_edited >= 0 or -0.2 <= x_edited <= 0.2 and x_original > x_edited;
 x_original < 0 and x_edited <= 0 or -0.2 <= x_edited <= 0.2 and x_original < x_edited
 
-- Mis-placed:
+- Mis-spliced:
 x_original > 0 and x_edited >= 0 and x_original < x_edited;
 x_original < 0 and x_edited >= 0 or 0.2 <= x_edited >= 0.2 and x_original > x_edited;
-x_original > 0 and -0.2 < x_edited or x_edited > 0.2 and x_original > x_edited;
-x_original < 0 and -0.2 < x_edited or x_edited > 0.2 and x_original < x_edited
+x_original > 0 and x_edited -0.2;
+x_original < 0 and x_edited > 0.2
 
 All *rMATS* results are located outside the *results* directory, in its own directory:
 *rmats_directory/*.

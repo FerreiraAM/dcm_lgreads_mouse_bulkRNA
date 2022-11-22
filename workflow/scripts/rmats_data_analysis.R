@@ -530,12 +530,10 @@ df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore
 #                            abs(diff) > 0.1 & (x_original) < 0 & (x_edited) <= 0 & (x_original) > (x_edited) ~ "reversal",
 #                            abs(diff) > 0.1 & (x_original) > 0 & (x_original) > (x_edited) &
 #                              ((x_edited) >= -0.2 & (x_edited) <= 0.2) ~ "rescue",
-#                            abs(diff) > 0.1 & (x_original) > 0 & (x_original) > (x_edited) &
-#                              ((x_edited) < -0.2 | (x_edited) > 0.2) ~ "reversal",
+#                            abs(diff) > 0.1 & (x_original) > 0 & (x_edited) < -0.2 ~ "reversal",
 #                            abs(diff) > 0.1 & (x_original) < 0 & (x_original) < (x_edited) &
 #                              ((x_edited) >= -0.2 & (x_edited) <= 0.2) ~ "rescue",
-#                            abs(diff) > 0.1 & (x_original) < 0 & (x_original) < (x_edited) &
-#                              ((x_edited) < -0.2 | ((x_edited)) > 0.2) ~ "reversal"))
+#                            abs(diff) > 0.1 & (x_original) < 0 & (x_edited) > 0.2) ~ "reversal"))
 #   # Replace NA
 #   replace_na(df_class, list(SJ_type = "diff_inf_0.1"))
 # }
@@ -550,14 +548,17 @@ df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore
                                PBSvsWT > (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6) & 
                                (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= -0.2 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0.2) ~ "rescue",
                              abs(diff) > 0.1 & PBSvsWT > 0 & 
-                               PBSvsWT > (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6) & 
-                               (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 > 0.2) ~ "reversal",
+                               # PBSvsWT > (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6) & 
+                               # (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 > 0.2) ~ "reversal",
+                               Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 < -0.2 ~ "reversal",
                              abs(diff) > 0.1 & PBSvsWT < 0 & 
                                (PBSvsWT) < Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 & 
                                (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 >= -0.2 & Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 <= 0.2) ~ "rescue",
                              abs(diff) > 0.1 & PBSvsWT < 0 &  
-                               (PBSvsWT) < Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 & 
-                               (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 > 0.2) ~ "reversal"))
+                               # (PBSvsWT) < Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 & 
+                               # (Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 < -0.2 | Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 > 0.2) ~ "reversal"))
+                               Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6 > 0.2 ~ "reversal"))
+
 # Replace NA 
 df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd_delta <- 
   df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_sig_wd_delta %>% 
@@ -1416,7 +1417,3 @@ pheatmap(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRN
          fontsize = 5, 
          main = "R636Q - DEG DESeq list - significant events in PBS vs WT and Abe8e vs WT")
 dev.off()
-
-
-
-
