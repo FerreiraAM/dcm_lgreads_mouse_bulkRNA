@@ -1019,7 +1019,11 @@ df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore
 # test <- as.data.frame(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_rbm20target_wmean) %>% 
 #   dplyr::select(geneSymbol, comparison, FDR, mutant, merge_SJ_ID, avg_IncLevel1, avg_IncLevel2) %>%
 #   pivot_longer(cols = c("avg_IncLevel1", "avg_IncLevel2"), names_to = "PSI", values_to = "mean")
-df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_rbm20target_wmean_w <- as.data.frame(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_rbm20target_wmean) %>% 
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_rbm20target_wmean_w <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_rbm20target_wmean %>% 
+  group_by(merge_SJ_ID) %>% 
+  dplyr::filter(abs(IncLevelDifference[comparison == "PBSvsWT"]) > 0.1) %>% 
+  as.data.frame() %>% 
   dplyr::select(geneSymbol, comparison, FDR, mutant, merge_SJ_ID, avg_IncLevel1, avg_IncLevel2) %>%
   pivot_wider(names_from = comparison,
               names_glue = "{comparison}_{.value}",
@@ -1075,7 +1079,11 @@ dev.off()
 
 ### P635L Abe8e ###
 # Prepare data to plot
-df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_rbm20target_wmean_w <- as.data.frame(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_rbm20target_wmean) %>% 
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_rbm20target_wmean_w <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_rbm20target_wmean %>% 
+  group_by(merge_SJ_ID) %>% 
+  dplyr::filter(abs(IncLevelDifference[comparison == "PBSvsWT"]) > 0.1) %>% 
+  as.data.frame() %>% 
   dplyr::select(geneSymbol, comparison, FDR, mutant, merge_SJ_ID, avg_IncLevel1, avg_IncLevel2) %>%
   pivot_wider(names_from = comparison,
               names_glue = "{comparison}_{.value}",
@@ -1129,9 +1137,73 @@ pheatmap(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJ
          main = "P635L - Hoogenhof list - significant events in PBS vs WT and Abe8e vs WT")
 dev.off()
 
+# Merge P635L
+df_P635L_after_base_editing_PBS_merged_SJmore1_dup <- 
+  rbind(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1, 
+       df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1)
+# RBM20 genes to filter
+v_P635L_after_base_editing_merged_rbm20target_genesymbols <- 
+  unique(c(v_P635L_after_base_editing_PBS_Abe8e_SJmore1_rbm20target_genesymbols, 
+           v_P635L_after_base_editing_PBS_SpRY_SJmore1_rbm20target_genesymbols))
+# If multiple PBSvsWT keep only one ~ remove duplicate
+df_P635L_after_base_editing_PBS_merged_SJmore1 <- 
+  dplyr::select(as.data.frame(df_P635L_after_base_editing_PBS_merged_SJmore1_dup), !c(ID, ID.1, SJ_ID)) %>%
+  distinct()
+# Add SJ_ID and filter for rbm20 target genes
+df_P635L_after_base_editing_PBS_merged_SJmore1_rbm20target <- 
+  df_P635L_after_base_editing_PBS_merged_SJmore1 %>% 
+  dplyr::filter(geneSymbol %in% v_P635L_after_base_editing_merged_rbm20target_genesymbols) %>% 
+  group_by(geneSymbol, SJ_name, longExonStart_0base, longExonEnd,
+           shortES, shortEE, flankingES, flankingEE,
+           X1stExonStart_0base, X1stExonEnd, X2ndExonStart_0base, X2ndExonEnd, upstreamES, upstreamEE, downstreamES, downstreamEE,
+           riExonEnd, exonStart_0base, exonEnd) %>% 
+  mutate(merge_SJ_ID = cur_group_id())
+# table(df_P635L_after_base_editing_PBS_merged_SJmore1_rbm20target$merge_SJ_ID)
+# df_P635L_after_base_editing_PBS_merged_SJmore1_rbm20target %>% 
+#   dplyr::filter(merge_SJ_ID == 1) %>% 
+#   as.data.frame()
+# Compute mean per event
+df_P635L_after_base_editing_PBS_merged_SJmore1_rbm20target_wmean <- 
+  df_P635L_after_base_editing_PBS_merged_SJmore1_rbm20target %>% 
+  rowwise() %>% 
+  mutate(avg_IncLevel1 = mean(as.numeric(unlist(strsplit(IncLevel1, ","))), na.rm = TRUE),
+         avg_IncLevel2 = mean(as.numeric(unlist(strsplit(IncLevel2, ","))), na.rm = TRUE))
+# Filter for delta PSI > 0.1 and transform to wide format
+df_P635L_after_base_editing_PBS_merged_SJmore1_rbm20target_wmean_w <- 
+  df_P635L_after_base_editing_PBS_merged_SJmore1_rbm20target_wmean %>% 
+  group_by(merge_SJ_ID) %>% 
+  dplyr::filter(abs(IncLevelDifference[comparison == "PBSvsWT"]) > 0.1) %>% 
+  as.data.frame() %>% 
+  dplyr::select(geneSymbol, comparison, FDR, mutant, merge_SJ_ID, avg_IncLevel1, avg_IncLevel2) %>%
+  pivot_wider(names_from = comparison,
+              names_glue = "{comparison}_{.value}",
+              values_from = c(avg_IncLevel1, avg_IncLevel2, FDR))
+# Events significant in PBS vs WT
+df_P635L_after_base_editing_PBS_merged_SJmore1_rbm20target_wmean_w_sig <- 
+  df_P635L_after_base_editing_PBS_merged_SJmore1_rbm20target_wmean_w %>% 
+  dplyr::filter(PBSvsWT_FDR < 0.01 | PBSvsWT_FDR == 0) 
+pdf("rmats_directory/heatmap_rmats_P635L_rbm20target_Hoogenhof_merged_siginPBSvsWT.pdf", width = 3, height = 6)
+pheatmap(df_P635L_after_base_editing_PBS_merged_SJmore1_rbm20target_wmean_w_sig[,c("PBSvsWT_avg_IncLevel2",
+                                                                                   "Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_avg_IncLevel1",
+                                                                                   "Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_avg_IncLevel1",
+                                                                                   "PBSvsWT_avg_IncLevel1")],
+         color=colorRampPalette(c("navy", "white", "red"))(50),
+         cluster_cols = FALSE,
+         cluster_rows = TRUE,
+         labels_row = df_P635L_after_base_editing_PBS_merged_SJmore1_rbm20target_wmean_w_sig$geneSymbol,
+         labels_col = c("WT", "Abe8e", "SpRY", "PBS"),
+         na_col = "gray58",
+         fontsize = 5, 
+         main = "P635L - Hoogenhof list - significant events in PBS vs WT")
+dev.off()
+
 ### R636Q Abe8e ###
 # Prepare data to plot
-df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_rbm20target_wmean_w <- as.data.frame(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_rbm20target_wmean) %>% 
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_rbm20target_wmean_w <- 
+  df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_rbm20target_wmean %>% 
+  group_by(merge_SJ_ID) %>% 
+  dplyr::filter(abs(IncLevelDifference[comparison == "PBSvsWT"]) > 0.1) %>% 
+  as.data.frame() %>% 
   dplyr::select(geneSymbol, comparison, FDR, mutant, merge_SJ_ID, avg_IncLevel1, avg_IncLevel2) %>%
   pivot_wider(names_from = comparison,
               names_glue = "{comparison}_{.value}",
@@ -1252,7 +1324,11 @@ df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore
 # Plot
 ### P635L SpRy ###
 # Prepare data to plot
-df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_DEG_DESeq_wmean_w <- as.data.frame(df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_DEG_DESeq_wmean) %>% 
+df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_DEG_DESeq_wmean_w <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_SpRY_and_Cterm_SpRY_gRNA5_SJmore1_DEG_DESeq_wmean %>% 
+  group_by(merge_SJ_ID) %>% 
+  dplyr::filter(abs(IncLevelDifference[comparison == "PBSvsWT"]) > 0.1) %>% 
+  as.data.frame() %>% 
   dplyr::select(geneSymbol, comparison, FDR, mutant, merge_SJ_ID, avg_IncLevel1, avg_IncLevel2) %>%
   pivot_wider(names_from = comparison,
               names_glue = "{comparison}_{.value}",
@@ -1308,7 +1384,11 @@ dev.off()
 
 ### P635L Abe8e ###
 # Prepare data to plot
-df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_DEG_DESeq_wmean_w <- as.data.frame(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_DEG_DESeq_wmean) %>% 
+df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_DEG_DESeq_wmean_w <- 
+  df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJmore1_DEG_DESeq_wmean %>% 
+  group_by(merge_SJ_ID) %>% 
+  dplyr::filter(abs(IncLevelDifference[comparison == "PBSvsWT"]) > 0.1) %>% 
+  as.data.frame() %>% 
   dplyr::select(geneSymbol, comparison, FDR, mutant, merge_SJ_ID, avg_IncLevel1, avg_IncLevel2) %>%
   pivot_wider(names_from = comparison,
               names_glue = "{comparison}_{.value}",
@@ -1362,9 +1442,66 @@ pheatmap(df_P635L_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_gRNA5_SJ
          main = "P635L - DEG DESeq list - significant events in PBS vs WT and Abe8e vs WT")
 dev.off()
 
+# Merge P635L
+# DEG genes to filter
+v_P635L_after_base_editing_merged_DEG_DESeq_genesymbols <- 
+  unique(c(v_P635L_after_base_editing_PBS_Abe8e_SJmore1_DEG_DESeq_genesymbols, 
+           v_P635L_after_base_editing_PBS_SpRY_SJmore1_DEG_DESeq_genesymbols))
+# Add SJ_ID and filter for DEG DESeq target genes
+df_P635L_after_base_editing_PBS_merged_SJmore1_DEG_DESeq <- 
+  df_P635L_after_base_editing_PBS_merged_SJmore1 %>% 
+  dplyr::filter(geneSymbol %in% v_P635L_after_base_editing_merged_DEG_DESeq_genesymbols) %>% 
+  group_by(geneSymbol, SJ_name, longExonStart_0base, longExonEnd,
+           shortES, shortEE, flankingES, flankingEE,
+           X1stExonStart_0base, X1stExonEnd, X2ndExonStart_0base, X2ndExonEnd, upstreamES, upstreamEE, downstreamES, downstreamEE,
+           riExonEnd, exonStart_0base, exonEnd) %>% 
+  mutate(merge_SJ_ID = cur_group_id())
+# table(df_P635L_after_base_editing_PBS_merged_SJmore1_DEG_DESeq$merge_SJ_ID)
+# df_P635L_after_base_editing_PBS_merged_SJmore1_DEG_DESeq %>% 
+#   dplyr::filter(merge_SJ_ID == 1) %>% 
+#   as.data.frame()
+# Compute mean per event
+df_P635L_after_base_editing_PBS_merged_SJmore1_DEG_DESeq_wmean <- 
+  df_P635L_after_base_editing_PBS_merged_SJmore1_DEG_DESeq %>% 
+  rowwise() %>% 
+  mutate(avg_IncLevel1 = mean(as.numeric(unlist(strsplit(IncLevel1, ","))), na.rm = TRUE),
+         avg_IncLevel2 = mean(as.numeric(unlist(strsplit(IncLevel2, ","))), na.rm = TRUE))
+# Filter for delta PSI > 0.1 and transform to wide format
+df_P635L_after_base_editing_PBS_merged_SJmore1_DEG_DESeq_wmean_w <- 
+  df_P635L_after_base_editing_PBS_merged_SJmore1_DEG_DESeq_wmean %>% 
+  group_by(merge_SJ_ID) %>% 
+  dplyr::filter(abs(IncLevelDifference[comparison == "PBSvsWT"]) > 0.1) %>% 
+  as.data.frame() %>% 
+  dplyr::select(geneSymbol, comparison, FDR, mutant, merge_SJ_ID, avg_IncLevel1, avg_IncLevel2) %>%
+  pivot_wider(names_from = comparison,
+              names_glue = "{comparison}_{.value}",
+              values_from = c(avg_IncLevel1, avg_IncLevel2, FDR))
+# Events significant in PBS vs WT
+df_P635L_after_base_editing_PBS_merged_SJmore1_DEG_DESeq_wmean_w_sig <- 
+  df_P635L_after_base_editing_PBS_merged_SJmore1_DEG_DESeq_wmean_w %>% 
+  dplyr::filter(PBSvsWT_FDR < 0.01 | PBSvsWT_FDR == 0) 
+pdf("rmats_directory/heatmap_rmats_P635L_DEG_DESeq_merged_siginPBSvsWT.pdf", width = 3, height = 6)
+pheatmap(df_P635L_after_base_editing_PBS_merged_SJmore1_DEG_DESeq_wmean_w_sig[,c("PBSvsWT_avg_IncLevel2",
+                                                                                 "Nterm_NRTH_Abe8e_and_Cterm_gRNA5vsWT_avg_IncLevel1",
+                                                                                 "Nterm_SpRY_and_Cterm_SpRY_gRNA5vsWT_avg_IncLevel1",
+                                                                                 "PBSvsWT_avg_IncLevel1")],
+         color=colorRampPalette(c("navy", "white", "red"))(50),
+         cluster_cols = FALSE,
+         cluster_rows = TRUE,
+         labels_row = df_P635L_after_base_editing_PBS_merged_SJmore1_DEG_DESeq_wmean_w_sig$geneSymbol,
+         labels_col = c("WT", "Abe8e", "SpRY", "PBS"),
+         na_col = "gray58",
+         fontsize = 5, 
+         main = "P635L - DEG DESeq list - significant events in PBS vs WT")
+dev.off()
+
 ### R636Q Abe8e ###
 # Prepare data to plot
-df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_DEG_DESeq_wmean_w <- as.data.frame(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_DEG_DESeq_wmean) %>% 
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_DEG_DESeq_wmean_w <- 
+  df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_DEG_DESeq_wmean %>%
+  group_by(merge_SJ_ID) %>% 
+  dplyr::filter(abs(IncLevelDifference[comparison == "PBSvsWT"]) > 0.1) %>% 
+  as.data.frame() %>% 
   dplyr::select(geneSymbol, comparison, FDR, mutant, merge_SJ_ID, avg_IncLevel1, avg_IncLevel2) %>%
   pivot_wider(names_from = comparison,
               names_glue = "{comparison}_{.value}",
@@ -1384,7 +1521,8 @@ pheatmap(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRN
          main = "R636Q - DEG DESeq list")
 dev.off()
 # Events significant in PBS vs WT
-df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_DEG_DESeq_wmean_w_sig <- df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_DEG_DESeq_wmean_w %>% 
+df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_DEG_DESeq_wmean_w_sig <- 
+  df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_DEG_DESeq_wmean_w %>% 
   dplyr::filter(PBSvsWT_FDR < 0.01 | PBSvsWT_FDR == 0) 
 pdf("rmats_directory/heatmap_rmats_R636Q_DEG_DESeq_Abe8e_siginPBSvsWT.pdf", width = 3, height = 6)
 pheatmap(df_R636Q_after_base_editing_PBS_and_Nterm_NRTH_Abe8e_and_Cterm_NRCH_gRNA6_SJmore1_DEG_DESeq_wmean_w_sig[,c("PBSvsWT_avg_IncLevel2",
